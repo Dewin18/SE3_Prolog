@@ -42,11 +42,11 @@
 %Baujahr = 1997.
 
 %2.2 Welche Haeuser wurden vor 1950 gebaut?
-- findall(obj(ObjNr, ObjTyp, Str, HausNr,  BJahr), (obj(ObjNr, ObjTyp, Str, HausNr, BJahr), BJahr<1950), L).
+:- findall(obj(ObjNr, ObjTyp, Str, HausNr,  BJahr), (obj(ObjNr, ObjTyp, Str, HausNr, BJahr), BJahr<1950), L).
 %Ausgabe: L = [obj(2, efh, bahnhofsstr, 27, 1943), obj(5, bahnhof, bahnhofsstr, 30, 1901)].
 
 %2.3 Wer besitzt Haeuser, die mehr als 300.000 Euro wert sind?
-- findall(bew(HausBesitzer, Wert), (bew(_, _, _, HausBesitzer, Wert, _), Wert>300000), L).
+:- findall(bew(HausBesitzer, Wert), (bew(_, _, _, HausBesitzer, Wert, _), Wert>300000), L).
 %Ausgabe: L = [bew(mueller, 315000), bew(piepenbrink, 1500000)].
 
 
