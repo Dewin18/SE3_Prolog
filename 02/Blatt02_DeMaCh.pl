@@ -9,7 +9,28 @@
 
 %Aufgabe 1
 
-/*TODO*/
+/*
+
+Prädikat:
+
+Ist eine Menge von Klauseln mit gleicher Signatur. Also Klauseln deren Köpfe den gleichen Funktor haben.
+
+zB.:
+verbrecher(X) :- mann(X)
+mann(X) :- mensch(X), maennlich (X), erwachsen (X)
+
+Klausel:
+
+Sind die Generalisierung von Fakten und Regeln, die Stelligkeit bzw. die Menge der Parameter werden in einem '/' hinter der Klausel angegeben (zB.: mutter_von/2)
+
+Struktur:
+
+Besteht aus einem Namen und mindestens einem Argument. Jedes Argument ist ein Term.
+
+zB.:
+hoerspiel(titel('Qualityland'), autor('Marc-Uwe Kling'))
+
+*/
 
 %Aufgabe 2
 
