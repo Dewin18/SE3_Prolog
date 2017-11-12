@@ -70,5 +70,20 @@ hoerspiel(titel('Qualityland'), autor('Marc-Uwe Kling'))
 :- findall(bew(HausBesitzer, Wert), (bew(_, _, _, HausBesitzer, Wert, _), Wert>300000), L).
 %Ausgabe: L = [bew(mueller, 315000), bew(piepenbrink, 1500000)].
 
+%Aufgabe 3
 
+:- consult('dateiverzeichnis.pl').
+
+%3.1
+
+idnameconvert(Id,Name):-findall(file(Id,_,Name,_,_,_).
+
+%geht nur wenn's eindeutig ist, daher hier eine etwas bessere Lösung die so 
+%noch nicht ganz funktioniert
+
+idnameconvert(Id,Name,Output):-findall(Id,file(Id,_,Name,_,_,_),Output).
+
+%3.2
+%3.3
+%3.4
 
