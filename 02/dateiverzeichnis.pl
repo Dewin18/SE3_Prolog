@@ -1,7 +1,6 @@
 
 :- dynamic(directory/5).
 :- dynamic(file/6).
-:- dynamic(key/1).
 
 % directory(DirId,Name,ParentId,DateCreated,DateModified)
 
@@ -44,7 +43,14 @@ fileIdNameConversion(FileId, Name) :- file(FileId, _, Name, _, _, _).
 directoryIdNameConversion(DirId, Name) :- directory(DirId, Name, _, _, _).
 
 %3.3
-fileNameToDirInfo(FileName, DirName):- file(_, DirId,FileName, _, _, _), directory(DirId, DirName, _, _, _).
+fileNameToDirInfo(FileName, DirName, DirId):- file(_, DirId,FileName, _, _, _), directory(DirId, DirName, _, _, _).
 
 %3.4
 parentDirInfo(DirName, ParentDirID) :- directory(_, DirName, ParentDirID, _, _).
+
+%Regeln für Aufgabe 4
+
+%4.1
+fileDirInfo(FileName, DirId) :- file(_, DirId, FileName, _, _, _). %Gibt die VerzeichnisID für die Datei bzw. alle Deteien einer VerzeichnisID
+
+getFileNamesFromDirectory(DirId, L) :- findall(FileName, fileDirInfo(FileName, DirId), L).

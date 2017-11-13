@@ -7,12 +7,11 @@
 %
 %Datum 10.11.2017
 
-%Aufgabe 1
+/*Aufgabe 1*/
 
 %1.1
 
 %Prädikat:
-%
 %Ist eine Menge von Klauseln mit gleicher Signatur. Also Klauseln deren Köpfe den gleichen Funktor haben.
 %
 %zB.:
@@ -20,13 +19,11 @@
 %mann(X) :- mensch(X), maennlich (X), erwachsen (X)
 %
 %Klausel:
-%
 %Sind die Generalisierung von Fakten und Regeln, die Stelligkeit bzw. die Menge der Parameter werden in einem '/' hinter der Klausel angegeben 
 %
 %zB.: mutter_von/2
 %
 %Struktur:
-%
 %Besteht aus einem Namen und mindestens einem Argument. Jedes Argument ist ein Term.
 %
 %zB.:
@@ -35,32 +32,29 @@
 %1.2
 
 %Suche:
-%
 %Die Suche ist bei Prolog ein besonders interessantes Thema da die Datenstrukturen ja meist in Relationen aufgebaut sind und somit 
 %besonders einfach und besonders schön durchsucht bzw. zugeordnet werden können
 %
 %Variable:
-%
 %Auch hier eine Besonderheit von Prolog, Variablen haben keinen vorgeschriebenen Datentyp. Es muss also nicht begrenzt werden was gespeichert 
 %bzw adressiert werden kann, genau so wie es keine (sichtbaren) Pointer gibt.
 %
 %Instanziierung:
-%
 %Man kann beim ausführen eines Prädikates Variablen mitgeben, je nachdem ob man einen Wert oder einen Platzhalter mitgibt, reagiert das 
 %Prädikat teilweise unterschiedlich. Vollständig instanziiert, vollständig uninstanziiert, teilweise instanziiert.
 
-%Aufgabe 2
+/*Aufgabe 2*/
 
-:- consult('haeuser.pl').
+%:- consult('haeuser.pl').
 
 %2.1 Welche Haeuser stehen in der Bahnhofsstraße?
 
 %Falls nur die Objekttypen der Haeuser in der Bahnhofsstr. angezeigt werden sollen.
-:- - findall(obj(ObjNr, ObjTyp), obj(ObjNr, ObjTyp, bahnhofsstr, _, _), L).
+%:- findall(obj(ObjNr, ObjTyp), obj(ObjNr, ObjTyp, bahnhofsstr, _, _), L).
 %Ausgabe: L = [obj(2, efh), obj(3, efh), obj(4, mfh), obj(5, bahnhof), obj(6, kaufhaus)].
 
 %Alternativ auch der Objekttyp, die Hausnummer und das Baujahr der Haeuser in der Bahnhofsstr.
-:- obj(_, Objekttyp, bahnhofsstr, Hausnummer, Baujahr).
+%:- obj(_, Objekttyp, bahnhofsstr, Hausnummer, Baujahr).
 %Ausgabe: 
 
 %Objekttyp = efh,
@@ -80,18 +74,18 @@
 %Baujahr = 1997.
 
 %2.2 Welche Haeuser wurden vor 1950 gebaut?
-:- findall(obj(ObjNr, ObjTyp, Str, HausNr,  BJahr), (obj(ObjNr, ObjTyp, Str, HausNr, BJahr), BJahr<1950), L).
+%:- findall(obj(ObjNr, ObjTyp, Str, HausNr,  BJahr), (obj(ObjNr, ObjTyp, Str, HausNr, BJahr), BJahr<1950), L).
 %Ausgabe: L = [obj(2, efh, bahnhofsstr, 27, 1943), obj(5, bahnhof, bahnhofsstr, 30, 1901)].
 
 %2.3 Wer besitzt Haeuser, die mehr als 300.000 Euro wert sind?
-:- findall(bew(HausBesitzer, Wert), (bew(_, _, _, HausBesitzer, Wert, _), Wert>300000), L).
+%:- findall(bew(HausBesitzer, Wert), (bew(_, _, _, HausBesitzer, Wert, _), Wert>300000), L).
 %Ausgabe: L = [bew(mueller, 315000), bew(piepenbrink, 1500000)].
 
-%Aufgabe 3
+/*Aufgabe 3*/
 
-:- consult('dateiverzeichnis.pl').
+%:- consult('dateiverzeichnis.pl').
 
-%Die Regeln zu Aufgabe 3 befinden sich in der Datenbasis. Der Vollständigkeitshalber haben wir sie hier in Form von Kommentaren beigefügt
+%Die Regeln zu Aufgabe 3 befinden sich auch in der Datenbasis. Der Vollständigkeitshalber haben wir sie hier in Form von Kommentaren beigefügt
 
 %Zunächst fügen wir einen neuen Fakt in die Datenbasis ein um einen negativen Fall in 3.3 zu Testen. Es handelt sich dabei um ein Verzeichnis, welches keine Dateien enthält
 %assertz(directory(13,neu,5,date(2017,11,11),date(2017,11,11))).
@@ -119,15 +113,14 @@
 %directoyIdNameConversion(14, X). liefert false., da kein Verzeichnis die ID mit der Nummer 14 zugeordnet ist.
 
 %3.3
-%fileNameToDirInfo(FileName, DirName):- file(_, DirId,FileName, _, _, _), directory(DirId, DirName, _, _, _).
+%fileNameToDirInfo(FileName, DirName, DirId):- file(_, DirId,FileName, _, _, _), directory(DirId, DirName, _, _, _).
 
 %Positive Ausgaben:
-%fileNameToDirInfo(X, urlaub). liefert als Ausgabe: X = quartieranfrage; X = paris; X = dijon; X = die_bruecke_von_avignon;, da sich diese Datein alle im Verzeichnis urlaub befinden.
-%fileNameToDirInfo(paris, X). liefert als Ausgabe X = pop; X = urlaub., da sich die Datei paris in den Verzeichnissen pop und urlaub befindet.
+%fileNameToDirInfo(paris, Verzeichnis, VerzeichnisID). liefert als Ausgabe: Verzeichnis = pop, VerzeichnisID = 9; Verzeichnis = urlaub, VerzeichnisID = 5.
+%fileNameToDirInfo(X, urlaub, 10), liefert als Aufgabe X = quartieranfrage.
 
 %Negative Ausgaben:
-%fileNameToDirInfo(neu, X). liefert false., da sich keine Datei im Verzeichnis mit dem Namen neu befindet
-%fileNameToDirInfo(undefined, X). liefert false., da keine Datei mit dem Namen undefined exisitert
+%fileNameToDirInfo(X, neu, 13). liefert false. da sich keine Dateien im Verzeichnis neu befinden
 
 %3.4
 %parentDirInfo(DirName, ParentDirID) :- directory(_, DirName, ParentDirID, _, _).
@@ -140,5 +133,17 @@
 %parentDirInfo(undefined, X). liefert false., da kein Verzeichnis mit dem Namen undefined exisitert.
 %parentDirInfo(X, 5). liefert false., da sich kein Verzeichnis im Verzeichnis mit der ID 5 befindet.
 
-%Aufgabe 4
+/*Aufgabe 4*/
 
+%Die Regeln zu Aufgabe 4 befinden sich auch im dateiverzeichnis.pl
+
+%fileDirInfo(FileName, DirId) :- file(_, DirId, FileName, _, _, _). Gibt die VerzeichnisID für die Datei bzw. alle Deteien einer VerzeichnisID
+
+%4.1
+%getFileNamesFromDirectory(DirId, L) :- findall(FileName, fileDirInfo(FileName, DirId), L).
+
+%getFileNamesFromDirectory(9, VerzeichnisID).
+%Ausgabe: VerzeichnisID = [in_the_summertime, i_am_so_romantic_tonight, ich_und_du_fuer_immer, paris].
+
+%getFileNamesFromDirectory(13, VerzeichnisID).
+%Ausgabe: VerzeichnisID = [].
