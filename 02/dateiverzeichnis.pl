@@ -1,6 +1,7 @@
 
 :- dynamic(directory/5).
 :- dynamic(file/6).
+:- dynamic(key/1).
 
 % directory(DirId,Name,ParentId,DateCreated,DateModified)
 
@@ -33,3 +34,17 @@ file(23,6,kirche,158,date(2008,1,28),date(2008,1,31)).
 file(24,6,festessen,151,date(2008,1,28),date(2008,1,31)).
 file(25,11,standesamt,33,date(2007,6,3),date(2007,6,3)).
 file(34,12,scheidungsklage,48,date(2009,9,2),date(2009,11,5)).
+
+%Regeln für Aufgabe 3
+
+%3.1
+fileIdNameConversion(FileId, Name) :- file(FileId, _, Name, _, _, _).
+
+%3.2
+directoryIdNameConversion(DirId, Name) :- directory(DirId, Name, _, _, _).
+
+%3.3
+fileNameToDirInfo(FileName, DirName):- file(_, DirId,FileName, _, _, _), directory(DirId, DirName, _, _, _).
+
+%3.4
+parentDirInfo(DirName, ParentDirID) :- directory(_, DirName, ParentDirID, _, _).
