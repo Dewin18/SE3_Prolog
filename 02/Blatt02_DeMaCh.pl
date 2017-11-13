@@ -91,28 +91,54 @@
 
 :- consult('dateiverzeichnis.pl').
 
-%Die Regeln zu Aufgabe 3 befinden sich in der Datenbasis. Der Vollständigkeitshalber haben wir sie hier in Form von kommentaren beigefügt
+%Die Regeln zu Aufgabe 3 befinden sich in der Datenbasis. Der Vollständigkeitshalber haben wir sie hier in Form von Kommentaren beigefügt
+
+%Zunächst fügen wir einen neuen Fakt in die Datenbasis ein um einen negativen Fall in 3.3 zu Testen. Es handelt sich dabei um ein Verzeichnis, welches keine Dateien enthält
+%assertz(directory(13,neu,5,date(2017,11,11),date(2017,11,11))).
 
 %3.1
 %fileIdNameConversion(FileId, Name) :- file(FileId, _, Name, _, _, _).
-%1 Ausgabebeispiel: mit fileIdNameConversion(X, Paris). bekommen wir als Ausgabe X = 4; X = 13, welche genau die IDs (Schlüssel) des Dateinnamens sind.
-%2 Ausgabebeispiel: mit fileIdNameConversion(4, X). liefert uns das Programm X = paris, da 4 die ID (Schlüssel) von dem Dateinamen paris ist.
+
+%Positive Ausgaben:
+%fileIdNameConversion(X, Paris). bekommen wir als Ausgabe X = 4; X = 13, welche genau die IDs (Schlüssel) des Dateinnamens sind.
+%fileIdNameConversion(4, X). liefert uns das Programm X = paris, da 4 die ID (Schlüssel) von dem Dateinamen paris ist.
+
+%Negative Ausgaben:
+%fileIdNameConversion(X, unedfined). liefert false., da es keine Datei mit dem Namen undefined gibt.
+%fileIdNameConversion(5, X). liefert ebenfalls false., da keine Datei mit der ID 5 exisitert.
 
 %3.2
 %directoryIdNameConversion(DirId, Name) :- directory(DirId, Name, _, _, _).
-%1 Ausgabebeispiel: directoryIdNameConversion(X, urlaub). liefert als Ausgabe X = 5; X = 10, welche genau die IDs des Verzeichnisses mit dem Namen urlaub sind.
-%2 Ausgabebeispiel: directoryIdNameConversion(1, X). liefert als Ausgabe X = root, da root der name der ID 1 ist.
+
+%Positive Ausgaben:
+%directoryIdNameConversion(X, urlaub). liefert als Ausgabe X = 5; X = 10, welche genau die IDs des Verzeichnisses mit dem Namen urlaub sind.
+%directoryIdNameConversion(1, X). liefert als Ausgabe X = root, da root der name der ID 1 ist.
+
+%Negative Ausgaben:
+%directoyIdNameConversion(X, unedfined). liefert false., da kein Verzeichnis mit dem Namen undefined Exisitert
+%directoyIdNameConversion(14, X). liefert false., da kein Verzeichnis die ID mit der Nummer 14 zugeordnet ist.
 
 %3.3
 %fileNameToDirInfo(FileName, DirName):- file(_, DirId,FileName, _, _, _), directory(DirId, DirName, _, _, _).
-%1 Ausgabebeispiel: Die Anfrage fileNameToDirInfo(X, urlaub). liefert als Ausgabe: X = quartieranfrage; X = paris; X = dijon; X = die_bruecke_von_avignon;, 
-%da sich diese Datein alle im Verzeichnis urlaub befinden.
-%2 Ausgabebeispiel: fileNameToDirInfo(paris, X). liefert als Ausgabe X = pop; X = urlaub., da sich die Datei paris in den Verzeichnissen pop und urlaub befindet.
+
+%Positive Ausgaben:
+%fileNameToDirInfo(X, urlaub). liefert als Ausgabe: X = quartieranfrage; X = paris; X = dijon; X = die_bruecke_von_avignon;, da sich diese Datein alle im Verzeichnis urlaub befinden.
+%fileNameToDirInfo(paris, X). liefert als Ausgabe X = pop; X = urlaub., da sich die Datei paris in den Verzeichnissen pop und urlaub befindet.
+
+%Negative Ausgaben:
+%fileNameToDirInfo(neu, X). liefert false., da sich keine Datei im Verzeichnis mit dem Namen neu befindet
+%fileNameToDirInfo(undefined, X). liefert false., da keine Datei mit dem Namen undefined exisitert
 
 %3.4
 %parentDirInfo(DirName, ParentDirID) :- directory(_, DirName, ParentDirID, _, _).
-%1 Ausgabebeispiel: parentDirInfo(X, 1). liefert als Ausgabe X = bilder; X = musik; X = dokumente., da diese Verzeichnisse das Verzeichnis mit der ID 1 als parent directoy haben.
-%2 Ausgabebeispiel: parentDirInfo(kinder, X). liefert als Ausgabe X = 2., da sich das Verzeichnis kinder im Verzeichnis mit der ID 2 befindet. 
+
+%Positive Ausgaben
+%parentDirInfo(X, 1). liefert als Ausgabe X = bilder; X = musik; X = dokumente., da diese Verzeichnisse das Verzeichnis mit der ID 1 als parent directoy haben.
+%parentDirInfo(kinder, X). liefert als Ausgabe X = 2., da sich das Verzeichnis kinder im Verzeichnis mit der ID 2 befindet. 
+
+%Negative Ausgaben:
+%parentDirInfo(undefined, X). liefert false., da kein Verzeichnis mit dem Namen undefined exisitert.
+%parentDirInfo(X, 5). liefert false., da sich kein Verzeichnis im Verzeichnis mit der ID 5 befindet.
 
 %Aufgabe 4
 
