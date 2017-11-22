@@ -32,7 +32,7 @@ Y = d(y, d(z, nil)).
 
 %m(X, c(g), h(x)) = m(t(r, s), c(u), h(g(T)), t).
 /*
-Die Unifikation scheitert. Zunächst ist die Arität beider Terme ungleich. Zusätzlich kann c(g) und c(u) nicht 
+Die Unifikation scheitert. Die Arität beider Terme ist ungleich. Zusätzlich kann c(g) und c(u) nicht 
 unifiziert werden.
 Ausgabe in Prolog:
 false.
