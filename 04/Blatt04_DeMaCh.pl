@@ -68,25 +68,60 @@ False = not(false).
 
 %Aufgabe 2: PEANO-Arithmetik
 
-%peano2int(+peano)
+%peano2int(+peano,?integer)
+/*
+Hier muss die Peano angegeben werden und für Integer eine Variable zur Ausgabe mitgegeben werden, damit das Programm funktioniert.
+*/
 
-peano2int(P):-p2int(P,0).
+peano2int(P,I):-p2int(P,I,0).
 
-p2int(0,N).
-p2int(s(P),N):-
+p2int(0,I,N):-I is N.
+p2int(s(P),I,N):-
 	N1 is N + 1,
-	p2int(P,N1).
+	p2int(P,I,N1).
 
 %next_peano(+peano,?neachste_peano)
+/*
+Hier muss auch wieder eine Peanozahl angegeben werden (ansonsten könnte ja kein Nachfolger bestimmt werden. Zusätzlich eine Variable zur Ausgabe der Folgezahl.
+*/
 
 next_peano(P,N):-N=s(P).
 
 %pre_peano(+peano,?vorherige_peano)
 
+/*
+Hier muss auch wieder eine Peanozahl angegeben werden (ansonsten könnte ja kein Vorgänger bestimmt werden. Zusätzlich eine Variable zur Ausgabe der Vorgängerzahl.
+*/
+
 pre_peano(s(P),V):-V=P.
 
-%sm_eq_peano(+peano1,+peano2), wobei peano1 kleiner oder gleich peano2 sein soll für true.
+%sm_eq_peano(+peano1,+peano2)
+/*
+Hier müssen zwei Peanozahlen angegeben werden, da ansonsten kein Vergleich möglich ist. Es wird geprüft ob Peano1 <= Peano2.
+*/
 
 sm_eq_peano(0,P2).
 sm_eq_peano(s(P1),s(P2)):-
 	sm_eq_peano(P1,P2).
+
+%verdoppelt(+Peano1,+Peano2)
+/*
+Hier müssen zwei Peanozahlen angegeben werden. Es gäbe bestimmt eine Möglichkeit es so zu implementieren das einfach nur eine Peanozahl halbiert und verglichen wird. Die folgende Lösung war aber die mir am logischen erscheinende.
+*/
+
+verdoppelt(P1,P2):-verdoppelt_peano(P1,P2,P1).
+
+verdoppelt_peano(0,P2,T):-T=P2.
+verdoppelt_peano(s(P1),s(P2),T):-
+	verdoppelt_peano(P1,P2,T).
+
+%sub_peano(+Peano1,+Peano2,?Ergebnis)
+/*
+Hier müssen zwei Peanozahlen angegeben werden, da die Subtraktion von Zwei zahlen nur funktioniert wenn auch beide angegeben sind. Außerdem eine Variable für die Ausgabe. Hier wird Peano1-Peano2 gerechnet und in Ergebnis ausgegeben.
+*/
+sub_peano(P1,0,E):-E = P1.
+sub_peano(s(P1),s(P2),E):-
+	sub_peano(P1,P2,E).
+
+%min_peano(?Peano1,?Peano2,?PeanoMin)
+
