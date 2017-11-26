@@ -67,3 +67,26 @@ False = not(false).
 */
 
 %Aufgabe 2: PEANO-Arithmetik
+
+%peano2int(+peano)
+
+peano2int(P):-p2int(P,0).
+
+p2int(0,N).
+p2int(s(P),N):-
+	N1 is N + 1,
+	p2int(P,N1).
+
+%next_peano(+peano,?neachste_peano)
+
+next_peano(P,N):-N=s(P).
+
+%pre_peano(+peano,?vorherige_peano)
+
+pre_peano(s(P),V):-V=P.
+
+%sm_eq_peano(+peano1,+peano2), wobei peano1 kleiner oder gleich peano2 sein soll für true.
+
+sm_eq_peano(0,P2).
+sm_eq_peano(s(P1),s(P2)):-
+	sm_eq_peano(P1,P2).
