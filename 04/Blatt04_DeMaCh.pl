@@ -125,6 +125,6 @@ sub_peano(s(P1),s(P2),E):-
 
 %min_peano(?Peano1,?Peano2,?PeanoMin)
 min_peano(P1,P2,PeanoMin):-min_peano_helper(P1,P2,PeanoMin,P1,P2).
-min_peano_helper(0,P2,PeanoMin,P1t,P2t):-PeanoMin=P1t.
-min_peano_helper(P1,0,PeanoMin,P1t,P2t):-PeanoMin=P2t.
+min_peano_helper(0,P2,PeanoMin,P1t,P2t):-PeanoMin= P1t.
+min_peano_helper(P1,0,PeanoMin,P1t,P2t):-PeanoMin= P2t.
 min_peano_helper(s(P1),s(P2),PeanoMin,P1t,P2t):-min_peano_helper(P1,P2,PeanoMin,P1t,P2t).
