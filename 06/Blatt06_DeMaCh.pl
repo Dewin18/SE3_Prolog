@@ -14,9 +14,9 @@ Datum 03.12.2017
 
 zins(Anlagebetrag,Zinsfaktor,0,Endguthaben):-Endguthaben is Anlagebetrag.
 zins(Anlagebetrag,Zinsfaktor,Anlagedauer,Endguthaben):-
-A1 is Anlagedauer - 1,
-B1 = Anlagebetrag + (Anlagebetrag * (Zinsfaktor * 0.01)),
-zins(B1,Zinsfaktor,A1,Endguthaben).
+	A1 is Anlagedauer - 1,
+	B1 = Anlagebetrag + (Anlagebetrag * (Zinsfaktor * 0.01)),
+	zins(B1,Zinsfaktor,A1,Endguthaben).
 
 /*
 
@@ -52,19 +52,19 @@ Das von mir intuitiv Programmierte Prädikat in 1.1 ist schon endrekursiv. Es wi
 
 %wachszins(+Anlagebetrag,+Basiszins,+Zinswachs,+Wachsphase,+Anlagedauer,?Endguthaben)
 
-wachszins(Anlagebetrag,Basiszins,Zinszuwachs,Wachsphase,0,Endguthaben):-Endguthaben is Anlagebetrag.
+wachszins(Anlagebetrag,Basiszins,Zinszuwachs,Wachsphase,0,Endguthaben):- Endguthaben is Anlagebetrag.
 
 wachszins(Anlagebetrag,Basiszins,Zinszuwachs,0,Anlagedauer,Endguthaben):-
-A1 is Anlagedauer - 1,
-B1 = Anlagebetrag + (Anlagebetrag * (Basiszins * 0.01)),
-wachszins(B1,Basiszins,Zinszuwachs,0,A1,Endguthaben).
+	A1 is Anlagedauer - 1,
+	B1 = Anlagebetrag + (Anlagebetrag * (Basiszins * 0.01)),
+	wachszins(B1,Basiszins,Zinszuwachs,0,A1,Endguthaben).
 
 wachszins(Anlagebetrag,Basiszins,Zinszuwachs,Wachsphase,Anlagedauer,Endguthaben):-
-W1 is Wachsphase - 1,
-A1 is Anlagedauer - 1,
-Z1 is Basiszins + Zinszuwachs,
-B1 = Anlagebetrag + (Anlagebetrag * (Z1 * 0.01)),
-wachszins(B1,Z1,Zinszuwachs,W1,A1,Endguthaben).
+	W1 is Wachsphase - 1,
+	A1 is Anlagedauer - 1,
+	Z1 is Basiszins + Zinszuwachs,
+	B1 = Anlagebetrag + (Anlagebetrag * (Z1 * 0.01)),
+	wachszins(B1,Z1,Zinszuwachs,W1,A1,Endguthaben).
 
 /*
 Ausgabe und Test:
@@ -112,16 +112,20 @@ E = 123.5821385523816 .
 % 2.1
 % pi-nr(+Rekursionsschritte, ?Resultat) naiv-rekursive Variante
 pi-nr(0, 0).
-pi-nr(Rekursionsschritte, Resultat) :- Rekursionsschritte =\= 0, X is (Rekursionsschritte - 1), pi-nr(X, Zwischenergebnis),
-Resultat is (4 * (-1)^(Rekursionsschritte + 1))/(2 * Rekursionsschritte - 1) + Zwischenergebnis.
+pi-nr(Rekursionsschritte, Resultat) :- 
+	Rekursionsschritte =\= 0, 
+	X is (Rekursionsschritte - 1), 
+	pi-nr(X, Zwischenergebnis),
+	Resultat is (4 * (-1)^(Rekursionsschritte + 1))/(2 * Rekursionsschritte - 1) + Zwischenergebnis.
 %getestet mit pi-nr(0, Resultat), pi-nr(1, Resultat), pi-nr(10, Resultat), pi-nr(50, Resultat), pi-nr(100, Resultat), pi-nr(1000, Resultat), pi-nr(10000, Resultat), pi-nr(100000, Resultat)
 
 % pi-er(+Rekursionsschritte, ?Resultat) end-rekursive Variante
 pi-er(Rekursionsschritte, Resultat) :- pi-wrap(Rekursionsschritte, Resultat, 0).
 pi-wrap(0, Resultat, Resultat).
-pi-wrap(Rekursionsschritte, Resultat, Akkumulator) :- Rekursionsschritte =\= 0, X is (Rekursionsschritte - 1), 
-Zwischenergebnis is (4 * (-1)^(Rekursionsschritte + 1))/(2 * Rekursionsschritte - 1) + Akkumulator,
-pi-wrap(X, Resultat, Zwischenergebnis).
+pi-wrap(Rekursionsschritte, Resultat, Akkumulator) :- 
+	Rekursionsschritte =\= 0, X is (Rekursionsschritte - 1), 
+	Zwischenergebnis is (4 * (-1)^(Rekursionsschritte + 1))/(2 * Rekursionsschritte - 1) + Akkumulator,
+	pi-wrap(X, Resultat, Zwischenergebnis).
 %getestet mit den gleichen Werten wie oben
 
 % 2.2
@@ -133,6 +137,33 @@ pi-wrap(X, Resultat, Zwischenergebnis).
 pi-wallis(Rekursionsschritte, Resultat) :- pi-wrap2(Rekursionsschritte, Resultat, 2).
 pi-wrap2(0, Resultat, Resultat).
 pi-wrap2(Rekursionsschritte, Resultat, Akkumulator) :- Rekursionsschritte =\= 0, X is (Rekursionsschritte - 1), 
-Zwischenergebnis is ((2 * Rekursionsschritte) / (2 * Rekursionsschritte - 1)) * ((2 * Rekursionsschritte) / (2 * Rekursionsschritte + 1)) * Akkumulator,
-pi-wrap2(X, Resultat, Zwischenergebnis).
+	Zwischenergebnis is ((2 * Rekursionsschritte) / (2 * Rekursionsschritte - 1)) * ((2 * Rekursionsschritte) / (2 * Rekursionsschritte + 1)) * Akkumulator,
+	pi-wrap2(X, Resultat, Zwischenergebnis).
 %getest mit den gleichen Werten wie oben
+
+% 4.1
+%Das Prädikat binom wurde naiv-rekursiv implementiert.
+%binom(+N, +K, ?R)
+binom(N, 0, 1).
+binom(N, 1, N).
+binom(N, K, 1) :- K = N.
+binom(N, K, R) :-
+	K < N,
+	K > 0,
+	N1 is N-1,
+	K1 is K-1,
+	binom(N1, K1, R1), binom(N1, K, R2),
+	R is R1 + R2.
+
+/*Ausgaben:*/	
+%?- binom(100, 0 , X).	
+%X = 1
+
+%?- binom(0, 100, X)
+%false.
+
+%?- once(binom(20, 5, X))
+%X = 15504
+
+%Bonus 1: Eine endrekursive Implementation würde den Rechenaufwand reduzieren.
+
