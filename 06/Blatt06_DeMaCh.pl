@@ -1,4 +1,4 @@
-﻿/* SE3 LP - Aufgabenblatt 06
+/* SE3 LP - Aufgabenblatt 06
 
 Autor: 
 Dewin Bagci, 6815336
@@ -144,10 +144,12 @@ pi-wrap2(Rekursionsschritte, Resultat, Akkumulator) :- Rekursionsschritte =\= 0,
 % 4.1
 %Das Prädikat binom wurde naiv-rekursiv implementiert.
 %binom(+N, +K, ?R)
-binom(N, 0, 1).
-binom(N, 1, N).
-binom(N, K, 1) :- K = N.
-binom(N, K, R) :-
+
+binom(N, K, R):-once(binom1(N, K, R)).
+binom1(N, 0, 1).
+binom1(N, 1, N).
+binom1(N, K, 1) :- K = N.
+binom1(N, K, R) :-
 	K < N,
 	K > 0,
 	N1 is N-1,
