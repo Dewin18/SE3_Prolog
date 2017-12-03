@@ -64,19 +64,45 @@ W1 is Wachsphase - 1,
 A1 is Anlagedauer - 1,
 Z1 is Basiszins + Zinszuwachs,
 B1 = Anlagebetrag + (Anlagebetrag * (Z1 * 0.01)),
-wachszins(B1,Basiszins,Zinszuwachs,0,A1,Endguthaben).
+wachszins(B1,Z1,Zinszuwachs,W1,A1,Endguthaben).
 
 /*
 Ausgabe und Test:
-?- wachszins(100,5,0,0,1,E).
-E = 105.0 .
 
-?- wachszins(100,5,1,1,1,E).
-E = 106.0 .
+?- wachszins(100,2,0,0,4,E).
+E = 108.243216 .
 
-?- wachszins(100,5,1,5,5,E).
-E = 128.8436625 .
+?- zins(100,2,4,E).
+E = 108.243216 
 
-?- zins(100,5,5,E).
-E = 127.62815624999999 
+*/
+
+%Aufgabe 1.4:
+/*
+Zinssatz über die Jahre:
+			1	2	3	4	5	6	7	8	9
+Ohne Wachstumsphase:	2%	2%	2%	2%	2%	2%	2%	2%	2%
+Kurze Wachstumsphase:	1%	2%	3%	3%	3%	3%	3%	3%	3%
+Lange Wachstumsphase:	1%	1.5%	2%	2.5%	3%	3.5%	4%	4%	4%
+
+Bei einer Anlagedauer von bis zu 3 Jahren is der feste Zinssatz OHNE Wachstum im Vorteil, bei einer Anlagedauer von bis zu 7 Jahrender Zinssatz mit kurzer Wachstumsphase und ab 7 Jahren Anlagedauer ist die lange Wachstumsphase besser. Alles leicht durch das Prädikat Wachszins auszuprobieren.
+
+?- wachszins(100,2,0,0,3,E).
+E = 106.1208 .
+
+?- wachszins(100,0,1,3,3,E).
+E = 106.11059999999999
+
+?- wachszins(100,0,1,3,7,E).
+E = 119.42841513438599 .
+
+?- wachszins(100,0.5,0.5,7,7,E).
+E = 118.82897937729 .
+
+?- wachszins(100,0,1,3,8,E).
+E = 123.01126758841757 .
+
+?- wachszins(100,0.5,0.5,7,8,E).
+E = 123.5821385523816 .
+
 */
