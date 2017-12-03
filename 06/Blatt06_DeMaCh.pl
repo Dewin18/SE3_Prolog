@@ -1,4 +1,4 @@
-/* SE3 LP - Aufgabenblatt 06
+﻿/* SE3 LP - Aufgabenblatt 06
 
 Autor: 
 Dewin Bagci, 6815336
@@ -106,8 +106,6 @@ E = 123.01126758841757 .
 E = 123.5821385523816 .
 
 */
-
-%Aufgabe 1:
 
 %Aufgabe 2:
 
