@@ -106,3 +106,35 @@ E = 123.01126758841757 .
 E = 123.5821385523816 .
 
 */
+
+%Aufgabe 1:
+
+%Aufgabe 2:
+
+% 2.1
+% pi-nr(+Rekursionsschritte, ?Resultat) naiv-rekursive Variante
+pi-nr(0, 0).
+pi-nr(Rekursionsschritte, Resultat) :- Rekursionsschritte =\= 0, X is (Rekursionsschritte - 1), pi-nr(X, Zwischenergebnis),
+Resultat is (4 * (-1)^(Rekursionsschritte + 1))/(2 * Rekursionsschritte - 1) + Zwischenergebnis.
+%getestet mit pi-nr(0, Resultat), pi-nr(1, Resultat), pi-nr(10, Resultat), pi-nr(50, Resultat), pi-nr(100, Resultat), pi-nr(1000, Resultat), pi-nr(10000, Resultat), pi-nr(100000, Resultat)
+
+% pi-er(+Rekursionsschritte, ?Resultat) end-rekursive Variante
+pi-er(Rekursionsschritte, Resultat) :- pi-wrap(Rekursionsschritte, Resultat, 0).
+pi-wrap(0, Resultat, Resultat).
+pi-wrap(Rekursionsschritte, Resultat, Akkumulator) :- Rekursionsschritte =\= 0, X is (Rekursionsschritte - 1), 
+Zwischenergebnis is (4 * (-1)^(Rekursionsschritte + 1))/(2 * Rekursionsschritte - 1) + Akkumulator,
+pi-wrap(X, Resultat, Zwischenergebnis).
+%getestet mit den gleichen Werten wie oben
+
+% 2.2
+% Die Naiv-rekursive Variante ist meiner ansicht nach einfacher zu verstehen, sie ist allerdings auch bedeutend langsamer
+% was wohl auf die intensive Nutzung des Stacks zur�ckzuf�hren ist.
+
+% 2.3
+%pi-wallis(+Rekursionsschritte, ?Resultat) Implementation der Wallis'schen Formel
+pi-wallis(Rekursionsschritte, Resultat) :- pi-wrap2(Rekursionsschritte, Resultat, 2).
+pi-wrap2(0, Resultat, Resultat).
+pi-wrap2(Rekursionsschritte, Resultat, Akkumulator) :- Rekursionsschritte =\= 0, X is (Rekursionsschritte - 1), 
+Zwischenergebnis is ((2 * Rekursionsschritte) / (2 * Rekursionsschritte - 1)) * ((2 * Rekursionsschritte) / (2 * Rekursionsschritte + 1)) * Akkumulator,
+pi-wrap2(X, Resultat, Zwischenergebnis).
+%getest mit den gleichen Werten wie oben
