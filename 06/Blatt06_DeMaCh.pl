@@ -5,7 +5,7 @@ Dewin Bagci, 6815336
 Christian Cyll, 6870744
 Max Wutz, 6308876
 
-Datum 03.12.2017
+Datum 04.12.2017
 */
 
 %Aufgabe 1.1:
@@ -90,7 +90,7 @@ E = 108.243216
 %Aufgabe 1.4:
 /*
 Zinssatz über die Jahre:
-			1	2	3	4	5	6	7	8	9
+						1	2	3	4	5	6	7	8	9
 Ohne Wachstumsphase:	2%	2%	2%	2%	2%	2%	2%	2%	2%
 Kurze Wachstumsphase:	1%	2%	3%	3%	3%	3%	3%	3%	3%
 Lange Wachstumsphase:	1%	1.5%	2%	2.5%	3%	3.5%	4%	4%	4%
