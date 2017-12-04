@@ -39,9 +39,19 @@ E = 100+100*(5*0.01)+(100+100*(5*0.01))*(5*0.01)
 
 %Aufgabe 1.2:
 
-/*
-Ich wüsste nicht wie man in Prolog ein nicht rekursives Prädikat aufbauen sollte, so das es trotzdem den Zinseszins berechnet. Es fehlt and IF und WHILE Clausus für sowetwas
-*/
+%zins2(+Anlagebetrag,+Zinsfaktor,+Anlagedauer,?Endguthaben)
+
+zins2(Anlagebetrag, Zinsfaktor, Anlagedauer, Endguthaben):-
+	Endguthaben is Anlagebetrag * (1 + (Zinsfaktor * 0.01)) ** Anlagedauer.
+	
+%Vergleich
+%?- zins(100, 5, 3, X).
+%X = 115.7625 
+
+%?- zins2(100, 5, 3, X)
+%X = 115.76250000000002.
+
+%In einigen Fällen werden bei dem zins2/4 Prädikat deutlich mehr Nachkommastellen angezeigt
 
 %Aufgabe 1.3:
 /*
@@ -142,16 +152,12 @@ pi-wrap2(Rekursionsschritte, Resultat, Akkumulator) :- Rekursionsschritte =\= 0,
 %getest mit den gleichen Werten wie oben
 
 % 4.1
-%Das Prädikat binom wurde naiv-rekursiv implementiert.
-%binom(+N, +K, ?R)
-
-binom(N, K, R):-once(binom1(N, K, R)).
-binom1(N, 0, 1).
-binom1(N, 1, N).
-binom1(N, K, 1) :- K = N.
+%Berechnung des Binomialkoeffizienten, naiv-rekursiv.
+%binom(+N, +K, ?Resultat)
+binom(N, K, R):- once(binom1(N, K, R)).
+binom1(N, K, 1) :- K = N; K = 0.
 binom1(N, K, R) :-
 	K < N,
-	K > 0,
 	N1 is N-1,
 	K1 is K-1,
 	binom(N1, K1, R1), binom(N1, K, R2),
@@ -159,13 +165,91 @@ binom1(N, K, R) :-
 
 /*Ausgaben:*/	
 %?- binom(100, 0 , X).	
-%X = 1
+%X = 1.
 
 %?- binom(0, 100, X)
 %false.
 
-%?- once(binom(20, 5, X))
-%X = 15504
+%?- binom(49, 6, X)
+%X = 13983816.
 
-%Bonus 1: Eine endrekursive Implementation würde den Rechenaufwand reduzieren.
+%Bonus 1: 
+/*
+Innerhalb des Prädikates binom/3, wird das Prädikat zwei mal rekusriv aufgerufen, wodurch
+die Rechenzeit deutlich verlängert wird. Eine endrekursive Implementation würde diesen
+Aufwand reduzieren. 
+*/
 
+%Standard Fakultätsberechnung, naiv-rekursiv
+%fak(+N, ?Resultat)
+fak(0, 1).
+fak(N, K) :- 
+	N > 0,
+	N1 is N - 1,
+	fak(N1, K2),
+	K is K2 * N.
+		
+%Berechnung des Binomialkoeffizienten nach der zweiten Formel n! / (k! * (n - k)!)
+%binom2(+N, +K, ?R)	
+binom2(N, K, R) :-
+	fak(N, FakN),
+	fak(K, FakK), 
+	Diff is N - K,
+	fak(Diff, FakDiff),
+	R is FakN / (FakK * FakDiff).
+	
+%Inkrementiert eine Zahl um 1
+%increment(+Zahl, ?Resultat)	
+increment(N1, N2) :- N2 is N1 + 1.	
+	
+%Berechnung des Binomialkoeffizienten nach der dritten Formel
+%binom3(+N, +K, +Zaehler, ?Resultat)
+binom3(N, K, J, 1) :- J = K.
+binom3(N, K, J, R) :-
+	J < K,
+	increment(J, J2),
+	binom3(N, K, J2, R1),
+	R is R1 * ((N + 1 - J2) / J2).
+
+%Vergleich von binom/3, binom2/3 und binom3/4
+
+/*
+Anders als das Prädikat binom/2, ruft das Prädikat binom2/2 drei mal die naiv-rekursive Fakultätsfunktion fak/2 auf. 
+auf. Die Laufzeit für die Berechnung von FakN, FakK und FakDiff liegt im Fakultätsbereich, was natürlich immer noch langsam ist,
+jedoch schneller als die Berechnung durch das Prädikat binom/3. 
+
+Das schnellste Ergebnis wird durch das Prädikat binom3/4 erzielt, da wir lediglich 2 * N (Rek. Abstieg / Aufstieg) rekursive Aufrufe haben.
+Wir müssen allerdings einen zaehler J, welchen wir mit dem Startwert 0 beim Prädikatsaufruf instanziieren, als zusätzliches Argument übergeben.
+*/	
+	
+/*Laurzeitvergleich*/
+
+/*N = 49, K = 6*/
+
+%?- time(binom(49, 6 , X)).
+% 192,348,809 inferences, %13.906 CPU in 13.938 seconds (100% CPU, 13831824 Lips)
+% X = 13983816.
+
+
+%?- time(binom2(49, 6 , X)).
+% 299 inferences, 0.000 CPU in 0.000 seconds (?% CPU, Infinite Lips)
+% X = 13983816 
+
+
+%?- time(binom3(49, 6, 0, X)).
+% 37 inferences, 0.000 CPU in 0.000 seconds (?% CPU, Infinite Lips)
+% X = 13983816.0 
+
+
+/*Mit groesseren Zahlen: N = 20000, K = 6*/
+
+%?- time(binom2(20000, 6 , X)).
+% 120,005 inferences, 5.891 CPU in 5.952 seconds (99% CPU, 20372 Lips)
+% X = 88822241108611263330000
+
+
+%?- time(binom3(20000, 6, 0, X)).
+% 37 inferences, 0.000 CPU in 0.000 seconds (?% CPU, Infinite Lips)
+% X = 8.882224110861127e+22 
+
+	
