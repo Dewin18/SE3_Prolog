@@ -22,6 +22,7 @@ getDirIDFromFile(Name, DirID) :- file(_, DirID, Name, _, _, _).
 %getSuperDir(?DirectoryID, ?ParentDirectoryID)
 getSuperDirID(DirID, SuperDirID) :- directory(DirID, _, SuperDirID, _, _).
 
+getDirFromFileID(FileID, DirID) :- file(FileID, DirID, _, _, _, _).
 
 /*1.1*/
 %Gibt Zugriffspfad als Liste von Verzeichnisnamen zurueck
@@ -79,6 +80,7 @@ getFilePathList(Name, DirID, List) :-
 %false.
 
 
+
 %?- getFilePathList(Name, 9, Zugriffspfad).
 %Name = in_the_summertime,
 %Zugriffspfad = [root, musik, pop] ;
@@ -96,22 +98,6 @@ getFilePathList(Name, DirID, List) :-
 
 %?- getFilePathList(paris, 9, [root, musik, pop]).
 %true .
-
-
-/*1.3*/
-%TODO
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
