@@ -15,7 +15,7 @@ Datum 12.12.2017
 getHash(Atom, Entries, Hash) :-
 	atom_codes(Atom, L),
 	sum_list(L, Sum),
-	Hash is Sum mod (Entries - 1). %TODO Hashwert darf nicht 0 werden!!!
+	Hash is (Sum mod Entries) + 1. %Hashwert darf nicht 0 werden, deshalb + 1!!!
 	
 empty(0, []).
 empty(N, [[]|HT]) :-
