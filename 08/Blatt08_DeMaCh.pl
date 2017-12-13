@@ -10,7 +10,21 @@ Datum 12.12.2017
 
 /*Aufgabe 1*/
 
-%TODO
+%Hash Funktion 
+%getHash(+Atom, +AnzahlEintraege, -Hashwert)
+getHash(Atom, Entries, Hash) :-
+	atom_codes(Atom, L),
+	sum_list(L, Sum),
+	Hash is Sum mod Entries.
+	
+empty(0, []).
+empty(N, [[]|HT]) :-
+	N > 0,
+	N1 is N - 1,
+	empty(N1, HT).
+	
+empty(N, HT) :-
+	findall([], between(1, N, _), HT).
 
 /*Aufgabe 2*/
 
@@ -34,7 +48,7 @@ bin_even(L) :-
 %?- bin_even([]).
 %true 
 
-%?- bin_even([0,1,1]).
+%?- bin_even([0,1,1]). 
 %true.
 
 %?- bin_even([1,1,1]).
