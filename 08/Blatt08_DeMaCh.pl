@@ -16,14 +16,16 @@ getHash(Atom, Entries, Hash) :-
 	atom_codes(Atom, L),
 	sum_list(L, Sum),
 	Hash is (Sum mod Entries) + 1. %Hashwert darf nicht 0 werden, deshalb + 1!!!
-	
-empty(0, []).
-empty(N, [[]|HT]) :-
+
+%Erzeugt eine neue, leere Hashtabelle der groesse N
+%myHash(?Entries, -Hashtable)	
+myHash(0, []).
+myHash(N, [[]|HT]) :-
 	N > 0,
 	N1 is N - 1,
-	empty(N1, HT).
+	myHash(N1, HT).
 	
-empty(N, HT) :-
+myHash(N, HT) :-
 	findall([], between(1, N, _), HT).
 
 /*Aufgabe 2*/
@@ -249,5 +251,30 @@ intToBin(Int, L) :-
 %false.
 
 /*2.6*/
+
+/*Die Definition ist extensional, da die gesamte "Berechnung" in Form
+von Fakten definiert wurde.*/
+
+%Addiert zwei Binaerzahlen 
+%add_bin(+Binary1, +Binary2, ?Cin, ?Cout, -Sum)
+add_bin(0, 0, 0, 0, 0).
+add_bin(0, 0, 1, 0, 1).
+add_bin(0, 1, 0, 0, 1).
+add_bin(0, 1, 1, 1, 0).
+add_bin(1, 0, 0, 0, 1).
+add_bin(1, 0, 1, 1, 0).
+add_bin(1, 1, 0, 1, 0).
+add_bin(1, 1, 1, 1, 1).
+
+/*2.7*/
+
+
+		
+%Und noch mal eine andere, leichtere Variante :P
+%addBinCool(+BinaryList, +BinaryList, -Result)
+add_bin_cool(L1, L2, Result) :-
+	binToInt(L1, N1),
+	binToInt(L2, N2),
+	intToBin((N1 + N2), Result).
 
 %TODO
