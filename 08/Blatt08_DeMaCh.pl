@@ -267,7 +267,22 @@ add_bin(1, 1, 0, 1, 0).
 add_bin(1, 1, 1, 1, 1).
 
 /*2.7*/
+add_bin_large(L1, L2, Result) :-
+	StartCin is 0,
+	add_bin_lists(L1, L2, StartCin, _, Result).
 
+%%TODO	
+	
+add_bin_lists([], [], Cin, _, [Cin]).	
+add_bin_lists(L1, L2, Cin, Cout, S) :-
+		head(H1, L1),
+		head(H2, L2),
+		add_bin(H1, H2, TempCin, X, TempS),
+		tail(L1, T1),
+		tail(L2, T2),
+		add_bin_lists(T1, T2, TempCout, _, S2),	
+		TempCout = TempCin,
+		append([TempS], S2, S). 
 
 		
 %Und noch mal eine andere, leichtere Variante :P
