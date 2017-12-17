@@ -50,7 +50,7 @@ getEntryfromHash(Key,[[Key|Values]|Xs],Data):-Data = Values.
 getEntryfromHash(Key,[X|Xs],Data):-getEntryfromHash(Key,Xs,Data).
 
 /*1.4*/
-%%TODO
+%Unsere definition fügt im Falle einen schon vorhandenen Wertes zu dem jeweiligen Schlüssel den anderen Wert einfach hinten an die Liste an, so das im eine List [Key,Value1,Value2,...,ValueN] ensteht.
 
 /*1.5*/
 %%TODO
