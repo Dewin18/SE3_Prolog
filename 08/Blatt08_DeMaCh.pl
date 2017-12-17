@@ -10,6 +10,8 @@ Datum 12.12.2017
 
 /*Aufgabe 1*/
 
+/*1.1*/
+
 %Hash Funktion 
 %getHash(+Atom, +AnzahlEintraege, -Hashwert)
 getHash(Atom, Entries, Hash) :-
@@ -27,6 +29,34 @@ myHash(N, [[]|HT]) :-
 	
 myHash(N, HT) :-
 	findall([], between(1, N, _), HT).
+	
+%Fügt einer Hashtabelle einen neuen Eintrag an der Stelle des Keys hinzu
+%addEntryToHashtable(+Schluessel, +Wert, +Oldhashtable, -Newhashtable)
+addEntryToHashtable(Key,Value,Oldhash,Newhash):-aETHelper(Key,Value,Oldhash,[],Newhash).
+
+aETHelper(Key,Value,[],Newhash,Output):-Output = Newhash.
+aETHelper(Key,Value,[[Key|Ys]|Xs],Newhash,Output):-append([Key|Ys],[Value],Valuedlist),append(Newhash,[Valuedlist],Temphash),aETHelper(Key,Value,Xs,Temphash,Output).
+aETHelper(Key,Value,[X|Xs],Newhash,Output):-append(Newhash,[X],Temphash),aETHelper(Key,Value,Xs,Temphash,Output).
+
+/*1.2*/
+%%TODO
+
+/*1.3*/
+
+%Liest den Wert zu einem Schlüssel aus einer Hashliste aus.
+%getEntryfromHash(+Schluessel, +Hashliste, -Ausgabe)
+getEntryfromHash(Key,[],Data).
+getEntryfromHash(Key,[[Key|Values]|Xs],Data):-Data = Values.
+getEntryfromHash(Key,[X|Xs],Data):-getEntryfromHash(Key,Xs,Data).
+
+/*1.4*/
+%%TODO
+
+/*1.5*/
+%%TODO
+
+/*1.6*/
+%%TODO
 
 /*Aufgabe 2*/
 
