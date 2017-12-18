@@ -38,9 +38,6 @@ aETHelper(Key,Value,[],Newhash,Output):-Output = Newhash.
 aETHelper(Key,Value,[[Key|Ys]|Xs],Newhash,Output):-append([Key|Ys],[Value],Valuedlist),append(Newhash,[Valuedlist],Temphash),aETHelper(Key,Value,Xs,Temphash,Output).
 aETHelper(Key,Value,[X|Xs],Newhash,Output):-append(Newhash,[X],Temphash),aETHelper(Key,Value,Xs,Temphash,Output).
 
-/*1.2*/
-%%TODO
-
 /*1.3*/
 
 %Liest den Wert zu einem Schlüssel aus einer Hashliste aus.
@@ -51,12 +48,6 @@ getEntryfromHash(Key,[X|Xs],Data):-getEntryfromHash(Key,Xs,Data).
 
 /*1.4*/
 %Unsere definition fügt im Falle einen schon vorhandenen Wertes zu dem jeweiligen Schlüssel den anderen Wert einfach hinten an die Liste an, so das im eine List [Key,Value1,Value2,...,ValueN] ensteht.
-
-/*1.5*/
-%%TODO
-
-/*1.6*/
-%%TODO
 
 /*Aufgabe 2*/
 
