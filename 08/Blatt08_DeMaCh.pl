@@ -51,7 +51,7 @@ getEntryfromHash(Key,[X|Xs],Data):-getEntryfromHash(Key,Xs,Data).
 
 /*Aufgabe 2*/
 
-/*2.1*/
+/*Ein paar Hilfspraedikate */
 
 %Gibt den Listenkopf zurueck und entfernt die Restliste
 head(E,[E|_]).
@@ -62,6 +62,8 @@ tail([_|T], T).
 %Entfernt das letzte Element aus einer Liste und gibt die Subliste zurueck
 remove_last([_], []).
 remove_last([X|Xs], [X|Removed]) :- remove_last(Xs, Removed).
+
+/*2.1*/
 
 %Prueft, ob eine Binaerzahl gerade ist
 %bin_even(+BinaryList)
@@ -342,30 +344,81 @@ removeLeadingZero(L, Cout, L1) :-
 	Cout =:= 0,
 	remove_last(L, L1).
 		
+%Ausgaben 2.7 add_large_bin/3
 
+%?- add_large_bin([0], [1], X).
+%X = [1] ;
+%false.
+
+%?- add_large_bin([1], [1], X).
+%X = [0, 1] ;
+%false.
+
+%?- add_large_bin([0, 1], [0, 1], X).
+%X = [0, 0, 1] ;
+%false.
+
+%?- add_large_bin([1], [1, 1, 1, 1, 1, 1], X).
+%X = [0, 0, 0, 0, 0, 0, 1] ;
+%false.	
+	
+%?- add_large_bin([1, 0, 1], [0, 1, 1], X).
+%X = [1, 1, 0, 1] ;
+%false.	
+	
 %Und noch mal eine andere, leichtere Variante :P
 %addBinCool(+BinaryList1, +BinaryList2, -Result)
 add_bin_cool(L1, L2, Result) :-
 	binToInt(L1, N1),
 	binToInt(L2, N2),
 	intToBin((N1 + N2), Result).
+	
+%Ausgaben add_bin_cool/3
+	
+%?- add_bin_cool([1,0,1], [1,0,1], X).
+%X = [0, 1, 0, 1] ;	
 
-/*2.8*/ %TODO
+/*2.8*/ 
 
-mult_bin([1], M2, M2).
-mult_bin(M1, [1], M1).
-%mult_bin(M1, M2, []) :- bin_even(M1).
+/*Multiplikation zweier Binaerzahlen gemaess der russischen Bauernmultiplikation. Es werden die Hilfspraedikate 
+make_bin_even/2 (Subtraktion um 1), bin_half/2 (halbieren), bin_double/2 (verdoppeln), add_if_odd/3, sowie 
+add_large_bin/3 verwendet. */
+
+%Multipliziert zwei Binaerzahlen
+%mult_bin(+BinaryList1, +BinaryList2, -Product)    
 mult_bin(M1, M2, Result) :-
-	make_bin_even(M1, M3),
-	bin_half(M3, Half),
-	bin_double(M2, Doubled),
-	mult_bin(Half, Doubled, R2),
-	add_if_odd(M1, M2, Q),
-	add_large_bin(Q, R2, Result).
+	once(mult_bin1(M1, M2, Result)).    %Verhindert Alternativen (es gibt nur ein gueltiges Ergebnis)
+            
+mult_bin1([1], M2, M2).                 %Multiplikation von neutrales Element und M1 liefert M1                      
+mult_bin1(M1, [1], M1).					%Multiplikation von neutrales Element und M2 liefert M2 
+mult_bin1(M1, M2, [0]) :-               %Multiplikation von [0] liefert [0] 
+	M1 = [0]; 
+	M2 = [0].
+    
+mult_bin1(M1, M2, Result) :-				
+	make_bin_even(M1, M3),				%Macht den Multiplikator gerade, damit halbieren moeglich ist
+	bin_half(M3, Half),					%halbiert Multiplikator
+	bin_double(M2, Doubled),            %verdoppelt Multiplikant
+	mult_bin1(Half, Doubled, R2),         
+	add_if_odd(M1, M2, Q),              %prueft, ob der Multiplikator, vor der halbierung, gerade bzw. ungerade war
+	add_large_bin(Q, R2, Result).       %addiert alle gueltigen Multiplikanden
 
-add_if_odd(Half, _, []) :- bin_even(Half).	
-add_if_odd(Half, Doubled, X) :-
-	bin_odd(Half),
-	add_large_bin(Half, Doubled, X).
+add_if_odd(M1, _, []) :- bin_even(M1).	%gibt die leere Liste zurueck, wenn der Multiplikator gerade ist
+add_if_odd(M1, M2, M2) :- bin_odd(M1).  %gibt den Multiplikanden zurueck, wenn der Multiplikator ungerade ist
 	
-	
+%Ausgaben 2.8 
+
+%?- mult_bin([1], [1, 1, 1], X).
+%X = [1, 1, 1].
+
+%?- mult_bin([0], [1, 1, 1], X).
+%X = [0].
+
+%?- mult_bin([1, 1], [1, 1], X).
+%X = [1, 0, 0, 1].
+
+%?- mult_bin([0, 1], [1, 1, 1], X).
+%X = [0, 1, 1, 1].	
+
+%?- mult_bin([1, 1, 1], [1, 1, 0, 0, 1], X).
+%X = [1, 0, 1, 0, 0, 0, 0, 1].
