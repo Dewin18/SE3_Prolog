@@ -123,7 +123,7 @@ bin_double(L, Doubled) :-
 %L = [0, 1, 0, 0, 1].
 
 %Halbiert eine Binaerzahl, wenn sie gerade ist
-%bin_half(?BinaryList, ?Half)
+%bin_half(?BinaryList, ?Half)´
 bin_half(L, Half) :-
 	bin_double(Half, L).
 	
@@ -139,7 +139,7 @@ bin_half(L, Half) :-
 
 %Ueberfuehrt eine ungerade Binaerzahl in eine gerade, durch subtraktion von 1
 %make_bin_even(+BinaryList, -EvenBinaryList)
-make_bin_even([1], [0]).
+make_bin_even([0|R], [0|R]).
 make_bin_even(L, Even) :-
 	bin_odd(L),
 	tail(L, Tail),
@@ -362,12 +362,19 @@ add_bin_cool(L1, L2, Result) :-
 /*2.8*/ %TODO
 
 mult_bin([1], M2, M2).
-mult_bin(M1, M2, []) :- bin_even(M1).
+mult_bin(M1, [1], M1).
+%mult_bin(M1, M2, []) :- bin_even(M1).
 mult_bin(M1, M2, Result) :-
-	bin_half(M1, Half),
+	make_bin_even(M1, M3),
+	bin_half(M3, Half),
 	bin_double(M2, Doubled),
 	mult_bin(Half, Doubled, R2),
-	add_large_bin(Half, Doubled, R3),
-	add_large_bin(R2, R3, Result).
+	add_if_odd(M1, M2, Q),
+	add_large_bin(Q, R2, Result).
+
+add_if_odd(Half, _, []) :- bin_even(Half).	
+add_if_odd(Half, Doubled, X) :-
+	bin_odd(Half),
+	add_large_bin(Half, Doubled, X).
 	
 	
