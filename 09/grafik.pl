@@ -15,10 +15,12 @@ draw(Size) :-
 	    draw_normal_shape(Display, box(100, 100), green, point(78,78)),
 		draw_filled_shape(Display, circle(100), orange, point(25,25)),
 		draw_image(Display, bitmap('32x32/yoshi.xpm'), point(100,100)),	
+		
+		%draw_xmas_tree(Display, Size, Color, Position)
+		draw_triangle2(Display, 20, point(50,50)),
 
         draw_recursive_shape(Display, _, 200, red, point(225,25)),
 
-		
 		true
    ),
    % if desired save the display as .jpg
@@ -64,7 +66,49 @@ draw_image(Name, ImagePath, Position) :-
 	ObjName = @_,
 	send(Name, display, new(ObjName, ImagePath), Position).
 	
+%draw_triangle(Name, Size, Color, X1, X2, Y1, Y2) :-
+%	ObjName = @_,
+%	send(Name, display, new(ObjName, line(X1, X2, Y1, Y2))),
+%	send(ObjName, Color).
+	
+getPointContent(Point, X, Y) :-
+	Point =.. L,
+	L = [_, X, _],
+	L = [_, _, Y].	
+	
+draw_triangle2(Name, Size, Point) :-
+	ObjName = @_,
+	get_triangle_bottom_coords(Point, Size, X1, Y1, X2, Y2),
+	get_triangle_left_coords(Point, Size, P1, Q1, P2, Q2),
+	get_triangle_right_coords(Point, Size, A1, B1, A2, B2),
+	send(Name, display, new(@t1, line(X1, Y1, X2, Y2))),
+	send(Name, display, new(@t2, line(P1, Q1, P2, Q2))),
+	send(Name, display, new(@t3, line(A1, B1, A2, B2))).
+	
+get_triangle_bottom_coords(Point, Size, X1, Y1, X2, Y2) :-
+	getPointContent(Point, X, Y),
+	X1 is X - (Size / 2),
+	Y1 is Y - (Size / 2),
+	X2 is X + (Size / 2),
+	Y2 is Y - (Size / 2).
+	
+get_triangle_left_coords(Point, Size, X1, Y1, X2, Y2) :-
+	getPointContent(Point, X, Y),
+	X1 is X - (Size / 2),
+	Y1 is Y - (Size / 2),
+	X2 is X,
+	Y2 is Y + (Size / 2).
+	
+get_triangle_right_coords(Point, Size, X1, Y1, X2, Y2) :-
+	getPointContent(Point, X, Y),
+	X1 is X + (Size / 2),
+	Y1 is Y - (Size / 2),
+	X2 is X,
+	Y2 is Y + (Size / 2).
+	
 % Call the program and see the result
+%geradeLinien:line(X-Anfangspunkt,Y-Anfangspunkt,X-Endpunkt,Y-Endpunkt)
+
 :- draw( 600 ).   % specify the desired display size in pixel here (required argument)   
 
 
