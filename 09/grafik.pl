@@ -7,20 +7,13 @@ draw(Size) :-
    % create a new display and open it
    new(Display,picture('*** Your picture''s name ***',size(SizeD,SizeD))),
    send(Display,open),
-   send(Display,background,colour(white)), %* MK: ggf. Farbe auf 'white' stellen
+   send(Display,background,colour(@default, 214, 20, 87, hsv)), %* MK: ggf. Farbe auf 'white' stellen
 
-   % draw the object on the display
+   % draw the objects on the display
    (
-		draw_filled_shape(Display, box(100, 100), orange, point(25,25)),
-	    draw_normal_shape(Display, box(100, 100), green, point(78,78)),
-		draw_filled_shape(Display, circle(100), orange, point(25,25)),
-		draw_image(Display, bitmap('32x32/yoshi.xpm'), point(100,100)),	
-		
-		%draw_xmas_tree(Display, Size, Color, Position)
-		draw_triangle2(Display, 20, point(50,50)),
-
-        draw_recursive_shape(Display, _, 200, red, point(225,25)),
-
+		draw_sky(Display), 
+		draw_snowman(Display, white, point(210, 350)), 	
+		draw_image(Display, bitmap('32x32/yoshi.xpm'), point(270,160)),	
 		true
    ),
    % if desired save the display as .jpg
@@ -36,82 +29,71 @@ draw(Size) :-
       send(Image,save,FileName,jpeg) ) ; true ),
 
    !.
+  
+%sraws the skyblue background as box on the screen
+draw_sky(Display) :-
+	send(Display, display , new(@sky, box(620,400)) ),
+	send(@sky, fill_pattern, colour(@default, 223, 70, 80, hsv)).
 
+%returns the coordinates X and Y for a given point(X, Y)
+%get_point_content(+Point, -X, -Y)
+get_point_content(Point, X, Y) :-
+	Point =.. L,
+	L = [_, X, _],
+	L = [_, _, Y].	
+   
+draw_snowman(Display, Color, Position) :-
+	get_point_content(Position, X, Y),
+	
+	%draw the snowmans body
+	draw_filled_shape(Display, circle(200), Color, point(X, Y)),
+	draw_filled_shape(Display, circle(170), Color, point(X + 17, Y - 130)),
+	
+	%draws the snowmans hat
+	draw_filled_shape(Display, box(160, 20), black, point(X + 20, Y - 120)),
+	draw_filled_shape(Display, box(130, 60), black, point(X + 35, Y - 160)),
+    
+	%draws the snomans eyes
+	draw_recursive_circle(Display, 30, 2, point(260,270)),
+    draw_recursive_circle(Display, 30, 2, point(330,270)).
 
-% draw_recursive_shape(Display,Size,CurrentSize,*** add additional parameters here, if needed ***)
-% draws a gradient graphics of size Size into Display
-% CurrentSize is decreased recursively fom Size to 0
-draw_recursive_shape(_,_,0,_). 
-draw_recursive_shape(Name, Size, CSize, Color, Position) :- 
-	ObjName = @_,
-	CSize > 0 ,        % only for positive integers
-	send(Name , display, new(ObjName ,box(CSize,CSize)), Position),
-	send(ObjName, colour(Color)),	
-	CSizeNew is CSize - 2,
-	draw_recursive_shape(Name, Size, CSizeNew, Color, Position).
+% draw_recursive_shape(+Display, +Size, +RecursionFactor, +Position)
+% The recursion factor determines the number of recursion steps. High recursion factor means
+% less recursion steps.
+draw_recursive_circle(Name, Size, RFactor, Position) :- 
+  get_point_content(Position, X, Y),
+  draw_recursive(Name, Size, RFactor, X, Y).
 
-%draw_filled_shape(+Display, +ObjectName, +Shape, +Color, +Position)	
+%helper predicate to draw a circle recursvie  
+draw_recursive(_, Size, _, _, _) :- Size =< 0.
+draw_recursive(Name, Size, RFactor, X, Y) :-
+  Size > 0,     
+  SizeNew is Size - (2 * RFactor),
+  NewX is X + RFactor,
+  NewY is Y + RFactor,
+  draw_recursive(Name, SizeNew, RFactor, NewX, NewY),
+  send(Name, display, new(@_,circle(Size)), point(NewX, NewY)).
+
+%draw_filled_shape(+Display, +Shape, +Color, +Position)	
 draw_filled_shape(Name, Shape, Color, Position) :-
 	ObjName = @_,
 	send(Name, display, new(ObjName, Shape), Position),
 	send(ObjName, fill_pattern, colour(Color)).
 	
-%draw_normal_shape(+Display, +ObjectName, +Shape, +Color, +Position)	
+%draw_normal_shape(+Display, +Shape, +Color, +Position)	
 draw_normal_shape(Name, Shape, Color, Position) :-
 	ObjName = @_,
 	send(Name, display, new(ObjName, Shape), Position),
 	send(ObjName, colour(Color)).	
 
+%draw_image(+Display, +xpmPath, +Position)
 draw_image(Name, ImagePath, Position) :-
 	ObjName = @_,
 	send(Name, display, new(ObjName, ImagePath), Position).
 	
-%draw_triangle(Name, Size, Color, X1, X2, Y1, Y2) :-
-%	ObjName = @_,
-%	send(Name, display, new(ObjName, line(X1, X2, Y1, Y2))),
-%	send(ObjName, Color).
-	
-getPointContent(Point, X, Y) :-
-	Point =.. L,
-	L = [_, X, _],
-	L = [_, _, Y].	
-	
-draw_triangle2(Name, Size, Point) :-
-	ObjName = @_,
-	get_triangle_bottom_coords(Point, Size, X1, Y1, X2, Y2),
-	get_triangle_left_coords(Point, Size, P1, Q1, P2, Q2),
-	get_triangle_right_coords(Point, Size, A1, B1, A2, B2),
-	send(Name, display, new(@t1, line(X1, Y1, X2, Y2))),
-	send(Name, display, new(@t2, line(P1, Q1, P2, Q2))),
-	send(Name, display, new(@t3, line(A1, B1, A2, B2))).
-	
-get_triangle_bottom_coords(Point, Size, X1, Y1, X2, Y2) :-
-	getPointContent(Point, X, Y),
-	X1 is X - (Size / 2),
-	Y1 is Y - (Size / 2),
-	X2 is X + (Size / 2),
-	Y2 is Y - (Size / 2).
-	
-get_triangle_left_coords(Point, Size, X1, Y1, X2, Y2) :-
-	getPointContent(Point, X, Y),
-	X1 is X - (Size / 2),
-	Y1 is Y - (Size / 2),
-	X2 is X,
-	Y2 is Y + (Size / 2).
-	
-get_triangle_right_coords(Point, Size, X1, Y1, X2, Y2) :-
-	getPointContent(Point, X, Y),
-	X1 is X + (Size / 2),
-	Y1 is Y - (Size / 2),
-	X2 is X,
-	Y2 is Y + (Size / 2).
-	
 % Call the program and see the result
-%geradeLinien:line(X-Anfangspunkt,Y-Anfangspunkt,X-Endpunkt,Y-Endpunkt)
 
 :- draw( 600 ).   % specify the desired display size in pixel here (required argument)   
-
-
 
 
 % ========== Tests from XPCE-guide Ch 5 ==========
