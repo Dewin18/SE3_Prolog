@@ -11,8 +11,8 @@ draw(Size) :-
 
    % draw the objects on the display
    (
-		draw_sky(Display), 
-		draw_snowman(Display, white, point(210, 350)), 	
+		draw_sky(Display, colour(@default, 223, 70, 80, hsv)), 
+		draw_snowman(Display, point(210, 350)), 	
 		draw_image(Display, bitmap('32x32/yoshi.xpm'), point(270,160)),	
 		true
    ),
@@ -31,9 +31,9 @@ draw(Size) :-
    !.
   
 %sraws the skyblue background as box on the screen
-draw_sky(Display) :-
+draw_sky(Display, Color) :-
 	send(Display, display , new(@sky, box(620,400)) ),
-	send(@sky, fill_pattern, colour(@default, 223, 70, 80, hsv)).
+	send(@sky, fill_pattern, Color).
 
 %returns the coordinates X and Y for a given point(X, Y)
 %get_point_content(+Point, -X, -Y)
@@ -42,37 +42,45 @@ get_point_content(Point, X, Y) :-
 	L = [_, X, _],
 	L = [_, _, Y].	
    
-draw_snowman(Display, Color, Position) :-
+draw_snowman(Display, Position) :-
 	get_point_content(Position, X, Y),
-	
-	%draw the snowmans body
+	draw_body(Display, white, X, Y), 
+	draw_hat(Display, black, X, Y),  
+	draw_eyes(Display, black). 
+
+%draws the snowmans body
+draw_body(Display, Color, X, Y) :- 
 	draw_filled_shape(Display, circle(200), Color, point(X, Y)),
-	draw_filled_shape(Display, circle(170), Color, point(X + 17, Y - 130)),
+	draw_filled_shape(Display, circle(170), Color, point(X + 17, Y - 130)).
+
+%draws the snowmans hat	
+draw_hat(Display, Color, X, Y) :-
+	draw_filled_shape(Display, box(160, 20), Color, point(X + 20, Y - 120)),
+	draw_filled_shape(Display, box(130, 60), Color, point(X + 35, Y - 160)).
 	
-	%draws the snowmans hat
-	draw_filled_shape(Display, box(160, 20), black, point(X + 20, Y - 120)),
-	draw_filled_shape(Display, box(130, 60), black, point(X + 35, Y - 160)),
-    
-	%draws the snomans eyes
-	draw_recursive_circle(Display, 30, 2, point(260,270)),
-    draw_recursive_circle(Display, 30, 2, point(330,270)).
+%draws the snomans eyes
+draw_eyes(Display, Color) :-
+	draw_recursive_circle(Display, 30, 2, Color, point(260,270)),
+    draw_recursive_circle(Display, 30, 2, Color, point(330,270)).
 
 % draw_recursive_shape(+Display, +Size, +RecursionFactor, +Position)
 % The recursion factor determines the number of recursion steps. High recursion factor means
 % less recursion steps.
-draw_recursive_circle(Name, Size, RFactor, Position) :- 
+draw_recursive_circle(Name, Size, RFactor, Color, Position) :- 
   get_point_content(Position, X, Y),
-  draw_recursive(Name, Size, RFactor, X, Y).
+  draw_recursive(Name, Size, RFactor, Color, X, Y).
 
 %helper predicate to draw a circle recursvie  
-draw_recursive(_, Size, _, _, _) :- Size =< 0.
-draw_recursive(Name, Size, RFactor, X, Y) :-
+draw_recursive(_, Size, _, _, _, _) :- Size =< 0.
+draw_recursive(Name, Size, RFactor, Color, X, Y) :-
+  ObjName = @_,
   Size > 0,     
   SizeNew is Size - (2 * RFactor),
   NewX is X + RFactor,
   NewY is Y + RFactor,
-  draw_recursive(Name, SizeNew, RFactor, NewX, NewY),
-  send(Name, display, new(@_,circle(Size)), point(NewX, NewY)).
+  draw_recursive(Name, SizeNew, RFactor, Color, NewX, NewY),
+  send(Name, display, new(ObjName,circle(Size)), point(NewX, NewY)),  
+  send(ObjName, colour(Color)).
 
 %draw_filled_shape(+Display, +Shape, +Color, +Position)	
 draw_filled_shape(Name, Shape, Color, Position) :-
