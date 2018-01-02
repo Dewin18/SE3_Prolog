@@ -5,28 +5,17 @@ draw(Size) :-
    % define size of the display (picture size + scroll bar area)
    SizeD is Size+20,
    % create a new display and open it
-   new(Display,picture('*** Your picture''s name ***',size(SizeD,SizeD))),
+   new(Display,picture('PROLOG - SNOWMAN',size(SizeD,SizeD))),
    send(Display,open),
    %send(Display,background,colour(black)),
    send(Display,background,colour(@default, 214, 20, 87, hsv)), %* MK: ggf. Farbe auf 'white' stellen
 
    % draw the objects on the display
    (
-		draw_sky(Display, colour(@default, 223, 70, 80, hsv)),
-		%draw_recursive_filled_object(Display, 620, 4, [circle, box], [white, black], point(0, 0)),
-		%draw_recursive_filled_object(Display, 220, 4, [circle, box], [red, black], point(200, 200)),		
-		draw_snowman(Display, point(210, 350)), 	
-		draw_recursive_filled_object(Display, 40, 2, [circle, box], [green, black], point(245, 190)),
-		draw_recursive_filled_object(Display, 60, 2, [box], [red, blue, yellow, green, orange], point(0, 560)),
-		
-		draw_image(Display, bitmap('32x32/yoshi.xpm'), point(270,160)),	
-
-	
-		%draw_recursive_filled_object(Display, 200, 40, [circle], [blue, black, white], point(50, 50)),
-		%draw_recursive_filled_object(Display, 200, 40, [circle], [blue, black, white], point(370, 50)),
-		%draw_recursive_filled_object(Display, 40, 4, [circle], [blue, white, black], point(130, 130)),
-		%draw_recursive_filled_object(Display, 40, 4, [circle], [blue, white, black], point(450, 130)),
-		%draw_recursive_normal_object(Display, 200, 4, green, point(200,200)),
+		draw_sky(Display),	
+		draw_snowman(Display, point(210, 320)), 		
+		draw_image(Display, bitmap('32x32/yoshi.xpm'), point(240,130)),	
+		draw_frame(Display), 	
 		true
    ),
    % if desired save the display as .jpg
@@ -44,9 +33,9 @@ draw(Size) :-
    !.
   
 %draws the skyblue background as box on the screen
-draw_sky(Display, Color) :-
+draw_sky(Display) :-
 	send(Display, display , new(@sky, box(620,400)) ),
-	send(@sky, fill_pattern, Color).
+	send(@sky, fill_pattern, colour(@default, 223, 70, 80, hsv)).
 
 %returns the coordinates X and Y for a given point(X, Y)
 %get_point_content(+Point, -X, -Y)
@@ -54,29 +43,39 @@ get_point_content(Point, X, Y) :-
 	Point =.. L,
 	L = [_, X, _],
 	L = [_, _, Y].	
-   
+	
 draw_snowman(Display, Position) :-
 	get_point_content(Position, X, Y),
-	draw_body(Display, white, X, Y), 
-	draw_hat(Display, black, X, Y),  
+	draw_body(Display, colour(white), X, Y), 
+	draw_buttons(Display, colour(orange), X, Y),
+	draw_hat(Display, colour(black), X, Y),  
 	draw_eyes(Display, X, Y),
-	draw_mouth(Display, black, X, Y).
+	draw_mouth(Display, colour(black), X, Y).
 
 %draws the snowmans body
 draw_body(Display, Color, X, Y) :- 
 	draw_filled_shape(Display, circle(200), Color, point(X, Y)),
 	draw_filled_shape(Display, circle(170), Color, point(X + 17, Y - 130)).
 
+%draws the snowmans buttons
+draw_buttons(Display, Color, X, Y) :-
+	draw_filled_shape(Display, circle(10), Color, point(X + 98, Y + 70)),
+	draw_filled_shape(Display, circle(10), Color, point(X + 98, Y + 90)),
+	draw_filled_shape(Display, circle(10), Color, point(X + 98, Y + 110)),
+	draw_filled_shape(Display, circle(10), Color, point(X + 98, Y + 130)).
+
 %draws the snowmans hat	
 draw_hat(Display, Color, X, Y) :-
 	draw_filled_shape(Display, box(160, 20), Color, point(X + 20, Y - 120)),
-	draw_filled_shape(Display, box(130, 60), Color, point(X + 35, Y - 160)).
+	draw_filled_shape(Display, box(130, 60), Color, point(X + 35, Y - 160)),
+	draw_recursive_filled_object(Display, 40, 2, [circle, box], [green, black], point(X + 35, Y - 160)).	
 	
 %draws the snomans eyes
 draw_eyes(Display, X, Y) :-
 	draw_recursive_filled_object(Display, 30, 4, [box, circle], [black, white], point(X + 52, Y - 80)),
     draw_recursive_filled_object(Display, 30, 4, [circle], [black, red], point(X + 122, Y - 80)).
-	
+
+%draws the snowmans mouth
 draw_mouth(Display, Color, X, Y) :-
 	draw_filled_shape(Display, circle(8), Color, point(X + 74, Y - 18)),
 	draw_filled_shape(Display, circle(8), Color, point(X + 80, Y - 10)),
@@ -84,32 +83,67 @@ draw_mouth(Display, Color, X, Y) :-
     draw_filled_shape(Display, circle(8), Color, point(X + 100, Y - 6)),
 	draw_filled_shape(Display, circle(8), Color, point(X + 110, Y - 10)),
 	draw_filled_shape(Display, circle(8), Color, point(X + 116, Y - 18)).
+
+%draws all recursive objects for the frame
+draw_frame(Display) :-
+	draw_left_frame(Display),
+	draw_bottom_frame(Display),
+	draw_right_frame(Display),
+	draw_top_frame(Display).
+
+
+draw_left_frame(Display) :-
+	draw_recursive_filled_object(Display, 62, 4, [box], [red, blue, orange, green], point(0, 0)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle, circle], [white,black, blue], point(0, 62)),
+	draw_recursive_filled_object(Display, 62, 4, [box, box, circle], [red, blue, orange, green], point(0, 124)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle], [black, pink], point(0, 186)),
+	draw_recursive_filled_object(Display, 62, 2, [box], [red,blue,yellow,green], point(0, 248)),
+	draw_recursive_filled_object(Display, 62, 7, [box], [red,white], point(0, 310)),
+	draw_recursive_filled_object(Display, 62, 7, [box, circle, circle, circle, box], [orange, black], point(0, 372)),
+	draw_recursive_filled_object(Display, 62, 3, [box, circle, box, circle, box, circle], [dark_green, blue, pink], point(0, 434)),
+	draw_recursive_filled_object(Display, 62, 12, [box, circle], [white, black], point(0, 496)),
+	draw_recursive_filled_object(Display, 62, 2, [box, circle], [black, light_blue], point(0, 558)).
 	
+draw_bottom_frame(Display) :-
+	draw_recursive_filled_object(Display, 62, 4, [box, box, circle, circle, box, circle], [red, blue], point(62, 558)),
+	draw_recursive_filled_object(Display, 62, 2, [box, circle, circle, circle, circle, circle], [black, light_green], point(124, 558)),
+	draw_recursive_filled_object(Display, 62, 20, [box, circle], [dark_green, red], point(186, 558)),
+	draw_recursive_filled_object(Display, 62, 2, [box], [black, yellow], point(248, 558)),
+	draw_recursive_filled_object(Display, 62, 2, [box, circle, circle], [white, black], point(310, 558)),
+	draw_recursive_filled_object(Display, 62, 2, [box], [pink, dark_grey, red, blue, yellow, green], point(372, 558)),
+	draw_recursive_filled_object(Display, 62, 2, [box, box, box, circle], [pink, dark_grey], point(434, 558)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle], [black, green], point(496, 558)),
+	draw_recursive_filled_object(Display, 62, 6, [box, circle, circle], [blue, white], point(558, 558)).
+	
+draw_right_frame(Display) :-
+	draw_recursive_filled_object(Display, 62, 4, [box, circle, circle, circle, circle, circle, circle], [grey, white], point(558, 496)),
+	draw_recursive_filled_object(Display, 62, 4, [box], [red, orange, yellow], point(558, 434)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle, box, circle], [black, light_blue, yellow, green], point(558, 372)),
+	draw_recursive_filled_object(Display, 62, 6, [box, box, circle, circle], [green, dark_green], point(558, 310)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle, circle, circle], [black, red], point(558, 248)),
+	draw_recursive_filled_object(Display, 62, 3, [box], [orange, blue], point(558, 186)),
+	draw_recursive_filled_object(Display, 62, 9, [box, circle], [white, black, grey], point(558, 124)),
+	draw_recursive_filled_object(Display, 62, 3, [box, circle], [black, light_green], point(558, 62)),
+	draw_recursive_filled_object(Display, 62, 6, [box, box, circle], [red, pink], point(558, 0)).
+	
+draw_top_frame(Display) :-
+	draw_recursive_filled_object(Display, 62, 2, [box, circle, circle, circle], [yellow, orange], point(496, 0)),
+	draw_recursive_filled_object(Display, 62, 5, [box], [black, green], point(434, 0)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle, circle], [red, orange, white], point(372, 0)),
+	draw_recursive_filled_object(Display, 62, 8, [box, circle], [black, blue, light_blue], point(310, 0)),
+	draw_recursive_filled_object(Display, 62, 2, [box, box, circle], [pink, white, black], point(248, 0)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle, circle, circle, circle, circle, circle, circle, circle, circle, circle], [yellow, violet], point(186, 0)),
+	draw_recursive_filled_object(Display, 62, 12, [box], [red, green], point(124, 0)),
+	draw_recursive_filled_object(Display, 62, 4, [box, circle], [blue, light_blue, dark_green], point(62, 0)).
 
-% draw_recursive_shape(+Display, +Size, +RecursionFactor, +Position)
-% The recursion factor determines the number of recursion steps. High recursion factor means
-% less recursion steps.
-draw_recursive_normal_object(Name, Size, RFactor, Color, Position) :- 
-  get_point_content(Position, X, Y),
-  draw_normal_object(Name, Size, RFactor, Color, X, Y).
-
-%helper predicate to draw a circle recursvie  
- draw_normal_object(_, Size, _, _, _, _) :- Size =< 0.
- draw_normal_object(Name, Size, RFactor, Color, X, Y) :-
-  ObjName = @_,
-  Size > 0,     
-  SizeNew is Size - (2 * RFactor),
-  NewX is X + RFactor,
-  NewY is Y + RFactor,
-  draw_normal_object(Name, SizeNew, RFactor, Color, NewX, NewY),
-  send(Name, display, new(ObjName, circle(Size)), point(NewX, NewY)),  
-  send(ObjName, colour(Color)).
-
+%draw_recursive_filled_object(+Display, +Size, +RecursionFactor, +ObjectList, +ColorList, +Position)
+%The recursion factor determines the number of recursion steps. High recursion factor means
+%less recursion steps.
 draw_recursive_filled_object(Name, Size, RFactor, ObjList, ColorList, Position) :- 
   get_point_content(Position, X, Y),
   draw_filled_object(Name, Size, 0, 0, RFactor, ObjList, ColorList, X, Y).
   
-%helper predicate to draw a circle recursvie  
+%helper predicate to draw the recursive objects from the ObjectList 
 draw_filled_object(_, Size, _, _, _, _, _, _, _) :- Size =< 0.
 draw_filled_object(Name, Size, ObjIndex, ColorIndex, RFactor, ObjList, ColorList, X, Y) :-
   nth0(ObjIndex, ObjList, ObjectName),
@@ -145,7 +179,7 @@ getObject(ObjName, Size, ObjType) :- ObjType = circle(Size), ObjName = circle.
 draw_filled_shape(Name, Shape, Color, Position) :-
 	ObjName = @_,
 	send(Name, display, new(ObjName, Shape), Position),
-	send(ObjName, fill_pattern, colour(Color)).
+	send(ObjName, fill_pattern, Color).
 	
 %draw_normal_shape(+Display, +Shape, +Color, +Position)	
 draw_normal_shape(Name, Shape, Color, Position) :-
