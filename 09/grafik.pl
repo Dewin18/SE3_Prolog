@@ -1,3 +1,15 @@
+/* SE3 LP - Aufgabenblatt 09
+
+Autor: 
+Dewin Bagci, 6815336
+Christian Cyll, 6870744
+Max Wutz, 6308876
+
+Datum 03.01.2018
+*/
+
+%Aufgabe 2.1
+
 % draw(+Size)
 % draws a graphics with a given Size
 
