@@ -146,9 +146,9 @@ draw_recursive_filled_object(Name, Size, RFactor, ObjList, ColorList, Position) 
 %helper predicate to draw the recursive objects from the ObjectList 
 draw_filled_object(_, Size, _, _, _, _, _, _, _) :- Size =< 0.
 draw_filled_object(Name, Size, ObjIndex, ColorIndex, RFactor, ObjList, ColorList, X, Y) :-
+  nth0(ColorIndex, ColorList, Color),
   nth0(ObjIndex, ObjList, ObjectName),
   getObject(ObjectName, Size, Object),
-  nth0(ColorIndex, ColorList, Color),
   ObjName = @_,
   Size > 0,     
   SizeNew is Size - (2 * RFactor),
@@ -181,12 +181,6 @@ draw_filled_shape(Name, Shape, Color, Position) :-
 	send(Name, display, new(ObjName, Shape), Position),
 	send(ObjName, fill_pattern, Color).
 	
-%draw_normal_shape(+Display, +Shape, +Color, +Position)	
-draw_normal_shape(Name, Shape, Color, Position) :-
-	ObjName = @_,
-	send(Name, display, new(ObjName, Shape), Position),
-	send(ObjName, colour(Color)).	
-
 %draw_image(+Display, +xpmPath, +Position)
 draw_image(Name, ImagePath, Position) :-
 	ObjName = @_,
@@ -215,6 +209,7 @@ mkp :-
 
 % generate objects in picture / window
 mkbo :-
+
    send( @p , display , new(@bo,box(100,100)) ).
 mkci :-
    send( @p , display , new(@ci,circle(50)) , point(25,25) ).
