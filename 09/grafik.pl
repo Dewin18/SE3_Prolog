@@ -163,7 +163,7 @@ draw_filled_object(Name, Size, ObjIndex, ColorIndex, RFactor, ObjList, ColorList
   getObject(ObjectName, Size, Object),
   ObjName = @_,
   Size > 0,     
-  SizeNew is Size - (2 * RFactor),
+  NewSize is Size - (2 * RFactor),
   NewObjIndex is ObjIndex + 1,
   NewColIndex is ColorIndex + 1,
   adaptIndex(ObjList, NewObjIndex, O),
@@ -172,7 +172,7 @@ draw_filled_object(Name, Size, ObjIndex, ColorIndex, RFactor, ObjList, ColorList
   NewY is Y + RFactor,
   send(Name, display, new(ObjName, Object), point(X, Y)),  
   send(ObjName, fill_pattern, colour(Color)),
-  draw_filled_object(Name, SizeNew, O, I, RFactor, ObjList, ColorList, NewX, NewY).  
+  draw_filled_object(Name, NewSize, O, I, RFactor, ObjList, ColorList, NewX, NewY).  
   
 adaptIndex(List, CIndex, NIndex) :-
 	length(List, Length),

@@ -48,13 +48,13 @@ draw_object(_, _, Size, _, _, _, _) :- Size =< 0.
 draw_object(Name, ShapeName, Size, CurrentColor, RFactor, X, Y) :- 
   getShape(ShapeName, Shape),
   Size > 0,    
-  SizeNew is Size - (2 * RFactor),
+  NewSize is Size - (2 * RFactor),
   jpl_new(Shape, [X, Y, Size, Size], Rectangle),
   jpl_get('java.awt.Color', CurrentColor, Color),
   jpl_call(Name, addDrawShape, [Rectangle, Color], _),
   NewX is X + RFactor,
   NewY is Y + RFactor,
-  draw_object(Name, ShapeName, SizeNew, CurrentColor, RFactor, NewX, NewY).
+  draw_object(Name, ShapeName, NewSize, CurrentColor, RFactor, NewX, NewY).
   
 
 % save drawing in the frame (if requested by user)
