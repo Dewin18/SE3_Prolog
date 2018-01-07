@@ -25,8 +25,12 @@ draw(Size) :-
    % draw the objects on the display
    (
 		draw_sky(Display),	
-		draw_snowman(Display, point(210, 320)), 		
+		
+		%NOTE: Please put the yoshi.xpm file in the directory C:\Program Files\swipl\xpce\bitmaps\32x32 
+		%or similar where you installed SWI-Prolog
 		draw_image(Display, bitmap('32x32/yoshi.xpm'), point(240,130)),	
+		
+		draw_snowman(Display, point(210, 320)), 	
 		draw_frame(Display), 	
 		true
    ),
