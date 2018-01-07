@@ -29,3 +29,8 @@ match(w(Word), Items, Word, Words) :-
 match(s([Word|Seg]), Items, Word, Words0) :-
 	append(Seg, Words1, Words0),
 	match(Items, Words1).
+	
+/*
+	example: chatbot([ich,habe,viel,lachs,gegessen,!],Response). -> Response = [warum, hast, du, viel, lachs, gegessen, ?].
+	
+*/
