@@ -17,16 +17,16 @@ demo_draw :-
 	jpl_call(Frame, setSize, [620, 620], _),
 
 	add_black_background(Frame),
-	draw_grid(Frame, blue, 31, 3, 20),
+	draw_grid(Frame, blue, 31, 15, 3, 20, point(0, 20)),
 	draw_filled_object(Frame, circle, 400, black, 100, 100),
-	draw_object(Frame, circle, 160, cyan, 6, 220, 220),
-	draw_object(Frame, circle, 140, blue, 12, 230, 230),
+	draw_crazy_object(Frame, 350, red, blue), 
 	
 	% display Frame
 	jpl_call(Frame, setVisible, [@(true)], _),
 
 	save_drawing(Frame).
 
+	
 %add_black_background(+Frame)
 add_black_background(Frame) :-
     getShape(rectangle, Shape),
@@ -44,25 +44,12 @@ getShape(ShapeName, Shape) :- Shape = 'java.awt.geom.Ellipse2D$Float', ShapeName
 getShape(ShapeName, Shape) :- Shape = 'java.awt.geom.QuadCurve2D$Float', ShapeName = curve. 	
 
 %Draws the grid with all horizontal and vertical waves
-%draw_grid(+Frame, +Color, +NumberOfRowsAndColumns, +Amplitude, +GapBetweenRowsAndColumns)
-draw_grid(Frame, Color, RowCol, Amplitude, Gap) :-
-	draw_wave_rows(Frame, Color, RowCol, Amplitude, Gap, point(0, 20), point(40, 20)),
-	draw_wave_columns(Frame, Color, RowCol, Amplitude, Gap, point(20, 0), point(20, 40)).
-	
-%Draws an object in a recursive way. The recursion factor determines the number of recursion steps. 
-%High recursion factor means less recursion steps.
-%draw_object(+Frame, +ShapeName, +Size, +Color, +RecursionFactor, +X, +Y)
-draw_object(_, _, Size, _, _, _, _) :- Size =< 0.	
-draw_object(Name, ShapeName, Size, CurrentColor, RFactor, X, Y) :- 
-  getShape(ShapeName, Shape),
-  Size > 0,    
-  NewSize is Size - (2 * RFactor),
-  jpl_new(Shape, [X, Y, Size, Size], Rectangle),
-  jpl_get('java.awt.Color', CurrentColor, Color),
-  jpl_call(Name, addDrawShape, [Rectangle, Color], _),
-  NewX is X + RFactor,
-  NewY is Y + RFactor,
-  draw_object(Name, ShapeName, NewSize, CurrentColor, RFactor, NewX, NewY).
+%draw_grid(+Frame, +Color, +NumberOfRowsAndColumns, + NumberOfFragments, +Amplitude, +GapBetweenRowsAndColumns)
+draw_grid(Frame, Color, RowCol, NumberOfFragments, Amplitude, Gap, Position) :-
+	get_point_content(Position, X, Y),
+	NextPoint is 2 * Y,
+	draw_wave_rows(Frame, Color, RowCol, NumberOfFragments, Amplitude, Gap, point(X, Y), point(NextPoint, Y)),
+	draw_wave_columns(Frame, Color, RowCol, NumberOfFragments, Amplitude, Gap, point(Y, X), point(Y, NextPoint)).
 
  %Draws a filled object on the frame 
  %draw_filled_object(+Frame, +ShapeName, + Size, +AWTColor, +XPosition, +YPosition)
@@ -73,19 +60,19 @@ draw_object(Name, ShapeName, Size, CurrentColor, RFactor, X, Y) :-
 	jpl_call(Frame, addFillShape, [Shape, Color], _).
 
 %Draws ALL wave rows on the frame
-%draw_wave_rows(+Frame, +Color, +NumberOfRows, +Amplitude, +GapBetweenRows, +Startpoint, +Endpoint)	
-draw_wave_rows(_, _, 0, _, _, _, _).	
-draw_wave_rows(Frame, Color, Rows, Amplitude, Gap, SP, EP) :-
+%draw_wave_rows(+Frame, +Color, +NumberOfRows, +NumberOfFragments, +Amplitude, +GapBetweenRows, +Startpoint, +Endpoint)	
+draw_wave_rows(_, _, 0, _, _, _, _, _).	
+draw_wave_rows(Frame, Color, Rows, NumberOfFragments, Amplitude, Gap, SP, EP) :-
     Rows > 0,
 	NewRows is Rows - 1,
-	draw_hWave(Frame, Amplitude, 15, Color, SP, EP),
+	draw_hWave(Frame, Amplitude, NumberOfFragments, Color, SP, EP),
 	get_point_content(SP, X1, Y1),
 	get_point_content(EP, X2, Y2),
 	NewY1 is Y1 + Gap,
 	NewY2 is Y2 + Gap,
 	NewSP = point(X1, NewY1),
 	NewEP = point(X2, NewY2),
-	draw_wave_rows(Frame, Color, NewRows, Amplitude, Gap, NewSP, NewEP).	
+	draw_wave_rows(Frame, Color, NewRows, NumberOfFragments, Amplitude, Gap, NewSP, NewEP).	
 	
 %Draws one horizontal wave from startpoint with a given number of wave fragments
 %draw_hWave(+Frame, +Amplitude, +NumberOfFragments, +Color, +Startpoint, +EndpointOfFirstWave)	
@@ -120,19 +107,19 @@ draw_hWave_fragment(Frame, Amplitude, CurrentColor, SP, EP) :-
 	jpl_call(Frame, addDrawShape, [Curve2, Color], _).
 
 %Draws ALL wave columns on the frame
-%draw_wave_columns(+Frame, +Color, +NumberOfColumns, +Amplitude, +GapBetweenRows, +Startpoint, +Endpoint)		
-draw_wave_columns(_, _, 0, _, _, _, _).	
-draw_wave_columns(Frame, Color, Columns, Amplitude, Gap, SP, EP) :-
+%draw_wave_columns(+Frame, +Color, +NumberOfColumns, +NumberOfFragments, +Amplitude, +GapBetweenRows, +Startpoint, +Endpoint)		
+draw_wave_columns(_, _, 0, _, _, _, _, _).	
+draw_wave_columns(Frame, Color, Columns, NumberOfFragments, Amplitude, Gap, SP, EP) :-
     Columns > 0,
 	NewColumns is Columns - 1,
-	draw_vWave(Frame,  Amplitude, 15, Color, SP, EP),
+	draw_vWave(Frame,  Amplitude, NumberOfFragments, Color, SP, EP),
 	get_point_content(SP, X1, Y1),
 	get_point_content(EP, X2, Y2),
 	NewX1 is X1 + Gap,
 	NewX2 is X2 + Gap,
 	NewSP = point(NewX1, Y1),
 	NewEP = point(NewX2, Y2),
-	draw_wave_columns(Frame, Color, NewColumns, Amplitude, Gap, NewSP, NewEP).	
+	draw_wave_columns(Frame, Color, NewColumns, NumberOfFragments, Amplitude, Gap, NewSP, NewEP).	
 
 %Draws one vertical wave from startpoint with a given number of wave fragments
 %draw_vWave(+Frame, +Amplitude, +NumberOfFragments, +Color, +Startpoint, +EndpointOfFirstWave)		
@@ -165,6 +152,15 @@ draw_vWave_fragment(Frame, Amplitude, CurrentColor, SP, EP) :-
 	jpl_get('java.awt.Color', CurrentColor, Color),
     jpl_call(Frame, addDrawShape, [Curve1, Color], _),
 	jpl_call(Frame, addDrawShape, [Curve2, Color], _).
+
+%draw_crazy_object(+Frame, +Amplitude, +Color1, +Color2)	
+draw_crazy_object(Frame, Amp, Color1, Color2) :-
+	draw_grid(Frame, Color1, 11, 1, Amp + 0, 20, point(200, 205)),
+	draw_grid(Frame, Color2, 11, 1, Amp + 1, 20, point(199, 204)),
+	draw_grid(Frame, Color1, 11, 1, Amp + 2, 20, point(198, 203)),
+	draw_grid(Frame, Color2, 11, 1, Amp + 3, 20, point(197, 202)),
+	draw_grid(Frame, Color1, 11, 1, Amp + 4, 20, point(196, 201)),
+	draw_grid(Frame, Color2, 11, 1, Amp + 5, 20, point(195, 200)).	
  
 %returns the coordinates X and Y for a given point(X, Y)
 %get_point_content(+Point, -X, -Y)
