@@ -13,13 +13,13 @@ Datum 03.01.2018
 :- use_module(library(jpl)).
 
 demo_draw :-
-	jpl_new('ShapeDrawingFrame', ['PROLOG - RECURSIVE CIRCLE'], Frame),
+	jpl_new('ShapeDrawingFrame', ['PROLOG - BUTTERFLY'], Frame),
 	jpl_call(Frame, setSize, [620, 620], _),
 
 	add_black_background(Frame),
 	draw_grid(Frame, blue, 31, 15, 3, 20, point(0, 20)),
 	draw_filled_object(Frame, circle, 400, black, 100, 100),
-	draw_crazy_object(Frame, 350, red, blue), 
+	draw_butterfly(Frame, 350, red, blue), 
 	
 	% display Frame
 	jpl_call(Frame, setVisible, [@(true)], _),
@@ -153,8 +153,8 @@ draw_vWave_fragment(Frame, Amplitude, CurrentColor, SP, EP) :-
     jpl_call(Frame, addDrawShape, [Curve1, Color], _),
 	jpl_call(Frame, addDrawShape, [Curve2, Color], _).
 
-%draw_crazy_object(+Frame, +Amplitude, +Color1, +Color2)	
-draw_crazy_object(Frame, Amp, Color1, Color2) :-
+%draw_butterfly(+Frame, +Amplitude, +Color1, +Color2)	
+draw_butterfly(Frame, Amp, Color1, Color2) :-
 	draw_grid(Frame, Color1, 11, 1, Amp + 0, 20, point(200, 205)),
 	draw_grid(Frame, Color2, 11, 1, Amp + 1, 20, point(199, 204)),
 	draw_grid(Frame, Color1, 11, 1, Amp + 2, 20, point(198, 203)),
