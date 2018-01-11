@@ -20,7 +20,7 @@ tail([_|T], T).
 
 get_date_list(L2) :- 
 	findall(Date, dax(Date, _,_), L), 
-	reverse(L, L2).´
+	reverse(L, L2).
 
 print_all_courses(CList) :-
 	get_date_list(L),
@@ -35,9 +35,19 @@ get_all_courses(L, Length, CList) :-
 	head(Head, L),
 	tail(L, Tail),
 	dax(Head, EKurs, SKurs),
-	append([EKurs], [SKurs], DaxPart),
+	append([EKurs / 700], [SKurs / 700], DaxPart),
 	get_all_courses(Tail, NewLength, NewList),
 	append(NewList, DaxPart, XList),
 	CList = XList.
 	
+%get_AVG(L, 
+
+
+
+sublist(L,N,P) :- 
+	append(P,_,L),
+	length(P,N).
 	
+trim(L,N,S) :-      
+	append(P,S,L),
+	length(P,N).
