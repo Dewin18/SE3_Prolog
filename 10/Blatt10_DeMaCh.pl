@@ -18,54 +18,78 @@ head(E,[E|_]).
 %Gibt die Restliste zurueck und entfernt den Listenkopf
 tail([_|T], T). 
 
+%Gibt eine Liste aller DAX Daten zurueck
 get_date_list(L2) :- 
 	findall(Date, dax(Date, _,_), L), 
 	reverse(L, L2).
 
-%1.1
-print_all_courses() :-
+/*1.1*/
+
+%Zeigt den DAX Verlauf auf dem Display an
+print_dax() :-
 	get_date_list(L),
-	get_all_courses(L, CList),
-	display("DAX", CList).
+	get_all_prices(L, APL, _, _),
+	display("DAX", APL).
 	
-get_all_courses([], []). 
-get_all_courses(L, CList) :-
+%Liefert drei Listen über den DAX Kurs zurueck
+%AP ist eine Liste mit allen Eröffnungskursen und Schlusskursen.
+%OP ist eine Liste mit allen Eröffnungskursen
+%CP ist eine Liste mit allen Schlusskursen
+%get_all_prices(+DAXDateList, -AllDAXPrices, -AllDAXOpeningPrices, -AllDAXClosingPrices) 	
+get_all_prices([], [], [], []). 
+get_all_prices(L, AP, OP, CP) :-
 	head(Head, L),
 	tail(L, Tail),
-	dax(Head, EKurs, SKurs),
-	append([EKurs / 700], [SKurs / 700], DaxPart),
-	get_all_courses(Tail, NewList),
-	append(NewList, DaxPart, CList).	
+	dax(Head, OpeningPrice, ClosingPrice),
+	OPScaled is OpeningPrice / 700,
+	CPScaled is ClosingPrice / 700,
+	append([OPScaled], [CPScaled], DaxPart),
+	get_all_prices(Tail, AP2, OP2, CP2),
+	append(AP2, DaxPart, AP),
+	append(OP2, [OPScaled], OP),
+	append(CP2, [CPScaled], CP).	
 
-%1.2
-print_all_avg_courses(N) :-
-	get_avg_courses(N, R),
+/*1.2*/
+
+%Zeigt den DAX Mittelwertverlauf auf dem Display an
+%print_avg_dax(+AnalyzeWindowSize)
+print_avg_dax(N) :-
+	get_date_list(L),
+	get_avg_prices(L, N, R),
 	display("AVG", R).
 
-get_avg_courses(N, R) :-
-	get_date_list(L),
+%Hilfspraedikat fuer die Prüfung des Analysefensters. 
+%Die Fenstergroesse kann nicht groesser sein als die Anzahl der DAX Fakten
+%get_avg_prices(+DAXDateList, +AnalyzeWindowSize, -AVGList)
+get_avg_prices(L, N, R) :-
 	length(L, Length),
     N =< Length,
 	get_all_avgs(L, N, R).
-	
+
+%Ruft das Praedikat fuer die die Mittelwertsberechnung auf.
+%Es wird der Mittelwert fuer den Eroeffnungskurs, sowie fuer
+%den Schlusskur separat, schrittweise berechnet.
+%get_all_avgs(+DAXDateList, +AnalyzeWindowSize, -AVGList)
 get_all_avgs(L, N, []) :-  length(L, Length), Length < N.
 get_all_avgs(L, N, R) :-
-	sublist(L, N, Sublist),
-	get_all_courses(Sublist, M),
-	get_AVG(M, AVG),
+	get_sublist(L, N, Sublist),
+	get_all_prices(Sublist, _, OP, CP),
+	get_avg(OP, OP_AVG),
+	get_avg(CP, CP_AVG),
+	append([OP_AVG], [CP_AVG], AVG),
 	tail(L, Tail),
 	get_all_avgs(Tail, N, R2),
-	append(R2, [AVG], R).
-	
-get_AVG(L, R) :-
+	append(R2, AVG, R).
+
+%Berechnet den Mittelwert aller Elemente einer Liste 	
+%get_avg(+List, -AVG)
+get_avg(L, R) :-
 	sumlist(L, Sum),
 	length(L, Length),
 	R is Sum / Length.
 
-sublist(L,N,P) :- 
-	append(P,_,L),
-	length(P,N).
-	
-trim(L,N,S) :-      
-	append(P,S,L),
-	length(P,N).
+%Gibt die Subliste der ersten N Elemente einer Liste zurueck
+%get_sublist(+List, +NumberOfElements, -Sublist)
+get_sublist(L,N,S) :- 
+	append(S,_,L),
+	length(S,N).
