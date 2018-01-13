@@ -59,7 +59,7 @@ print_avg_dax(N) :-
 	display("AVG", R).
 
 %Hilfspraedikat fuer die Prüfung des Analysefensters. 
-%Die Fenstergroesse kann nicht groesser sein als die Anzahl der DAX Fakten
+%Das Analysefenster kann nicht groesser sein als die Anzahl der DAX Fakten
 %get_avg_prices(+DAXDateList, +AnalyzeWindowSize, -AVGList)
 get_avg_prices(L, N, R) :-
 	length(L, Length),
@@ -93,3 +93,14 @@ get_avg(L, R) :-
 get_sublist(L,N,S) :- 
 	append(S,_,L),
 	length(S,N).
+	
+/*1.3*/
+%Zeigt den Mittelwert fuer zwei verschieden große Analysefenster an
+%print_two_avg_dax(+AnalyzeWindowSize1, +AnalyzeWindowSize2)
+print_two_avg_dax(N1, N2) :-
+	get_date_list(L),
+	get_avg_prices(L, N1, R),
+	get_avg_prices(L, N2, R2),
+	displayTwo("AVG DAX comparison", R, R2).
+	
+	
