@@ -42,8 +42,8 @@ get_all_prices(L, AP, OP, CP) :-
 	head(Head, L),
 	tail(L, Tail),
 	dax(Head, OpeningPrice, ClosingPrice),
-	OPScaled is OpeningPrice / 700,
-	CPScaled is ClosingPrice / 700,
+	OPScaled is OpeningPrice / 1,
+	CPScaled is ClosingPrice / 1,
 	append([CPScaled], [OPScaled], DaxPart),
 	get_all_prices(Tail, AP2, OP2, CP2),
 	append(AP2, DaxPart, AP),
@@ -111,16 +111,18 @@ print_two_avg_dax(N1, N2) :-
 
 /*1.5*/
 	
-make_forecast(Date1, Date2, Forecast, Sublist) :-
+make_forecast(Date1, Date2, Forecast, AP2) :-
 	Date1 @< Date2,
 	get_date_list(L),
 	nth0(Index1, L, Date1),
 	nth0(Index2, L, Date2),
 	Diff is (Index2 + 1) - Index1,
 	trim_list(L, Index1, TList),
-	get_sublist(TList, Diff, Sublist).
-	%1 Erstelle Liste, aller Daten zwischen D1 und D2	
-	%2 Erstelle Prognose
+	get_sublist(TList, Diff, Sublist),
+	get_all_prices(Sublist, AP, _, _),
+	reverse(AP, AP2).
+	%1 Erstelle Liste, aller Daten zwischen D1 und D2 #DONE
+	%2 Erstelle Prognose #TODO
 	
 trim_list(L, N, S) :-      
 	append(P, S, L),
