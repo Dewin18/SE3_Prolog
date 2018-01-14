@@ -81,20 +81,21 @@ get_all_avgs(L, N, R) :-
 	get_all_avgs(Tail, N, R2),
 	append(R2, AVG, R).
 
-%Berechnet den Mittelwert aller Elemente einer Liste 	
+%Hilfspraedikat: Berechnet den Mittelwert aller Elemente einer Liste 	
 %get_avg(+List, -AVG)
 get_avg(L, R) :-
 	sumlist(L, Sum),
 	length(L, Length),
 	R is Sum / Length.
 
-%Gibt die Subliste der ersten N Elemente einer Liste zurueck
+%Hilfspraedikat: Gibt die Subliste der ersten N Elemente einer Liste zurueck
 %get_sublist(+List, +NumberOfElements, -Sublist)
-get_sublist(L,N,S) :- 
-	append(S,_,L),
-	length(S,N).
+get_sublist(L, N, S) :- 
+	append(S, _, L),
+	length(S, N).
 	
 /*1.3*/
+
 %Zeigt den Mittelwert fuer zwei verschieden große Analysefenster an
 %print_two_avg_dax(+AnalyzeWindowSize1, +AnalyzeWindowSize2)
 print_two_avg_dax(N1, N2) :-
@@ -102,5 +103,27 @@ print_two_avg_dax(N1, N2) :-
 	get_avg_prices(L, N1, R),
 	get_avg_prices(L, N2, R2),
 	displayTwo("AVG DAX comparison", R, R2).
+
+/*1.4*/
+
+%TODO
+
+/*1.5*/
+
+make_forecast(Date1, Date2, Forecast, Sublist) :-
+	Date1 @< Date2,
+	get_date_list(L),
+	nth0(Index1, L, Date1),
+	nth0(Index2, L, Date2),
+	Diff is (Index2 + 1) - Index1,
+	trim_list(L, Index1, TList),
+	get_sublist(TList, Diff, Sublist).
+	%1 Erstelle Liste, aller Daten zwischen D1 und D2	
+	%2 Erstelle Prognose
+	
+trim_list(L, N, S) :-      
+	append(P, S, L),
+	length(P, N).
+
 	
 	
