@@ -28,24 +28,29 @@ get_date_list(L2) :-
 %Zeigt den DAX Verlauf auf dem Display an
 print_dax() :-
 	get_date_list(L),
-	get_all_prices(L, APL, _, _),
-	reverse(APL, APL2),
-	display("DAX", APL2).
+	get_all_prices(L, AP, OP, CP),
+	display("DAX", AP).
+	
+get_all_prices(L, AP, OP, CP) :-
+	get_prices(L, AP2, OP2, CP2),
+	reverse(AP2, AP),
+	reverse(OP2, OP),
+	reverse(CP2, CP).
 	
 %Liefert drei Listen über den DAX Kurs zurueck
 %AP ist eine Liste mit allen Eröffnungskursen und Schlusskursen.
 %OP ist eine Liste mit allen Eröffnungskursen
 %CP ist eine Liste mit allen Schlusskursen
 %get_all_prices(+DAXDateList, -AllDAXPrices, -AllDAXOpeningPrices, -AllDAXClosingPrices) 	
-get_all_prices([], [], [], []). 
-get_all_prices(L, AP, OP, CP) :-
+get_prices([], [], [], []). 
+get_prices(L, AP, OP, CP) :-
 	head(Head, L),
 	tail(L, Tail),
 	dax(Head, OpeningPrice, ClosingPrice),
-	OPScaled is OpeningPrice / 700,
-	CPScaled is ClosingPrice / 700,
+	OPScaled is OpeningPrice / 1,
+	CPScaled is ClosingPrice / 1,
 	append([CPScaled], [OPScaled], DaxPart),
-	get_all_prices(Tail, AP2, OP2, CP2),
+	get_prices(Tail, AP2, OP2, CP2),
 	append(AP2, DaxPart, AP),
 	append(OP2, [OPScaled], OP),
 	append(CP2, [CPScaled], CP).	
@@ -111,7 +116,7 @@ print_two_avg_dax(N1, N2) :-
 
 /*1.5*/
 	
-make_forecast(Date1, Date2, Forecast, AP2) :-
+make_forecast(Date1, Date2, Forecast, AP) :-
 	Date1 @< Date2,
 	get_date_list(L),
 	nth0(Index1, L, Date1),
@@ -119,8 +124,7 @@ make_forecast(Date1, Date2, Forecast, AP2) :-
 	Diff is (Index2 + 1) - Index1,
 	trim_list(L, Index1, TList),
 	get_sublist(TList, Diff, Sublist),
-	get_all_prices(Sublist, AP, _, _),
-	reverse(AP, AP2).
+	get_all_prices(Sublist, AP, _, _).
 	%1 Erstelle Liste, aller Daten zwischen D1 und D2 #DONE
 	%2 Erstelle Prognose #TODO
 	
