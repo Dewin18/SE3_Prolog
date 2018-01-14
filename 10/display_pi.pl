@@ -31,6 +31,6 @@ display(Label,L):-
                                 
 %displayTwo(Fenster-Ueberschrift,Liste1,Liste2)									 
 displayTwo(Label, L1, L2):-
-   init_display(@d,Label,1280,700),                                  
+   init_display(@d,Label,1280,400),                                  
    display_sequence(@d,black,L1,2.5,30),
    display_sequence(@d,blue,L2,2.5,30).   

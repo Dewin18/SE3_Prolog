@@ -29,7 +29,8 @@ get_date_list(L2) :-
 print_dax() :-
 	get_date_list(L),
 	get_all_prices(L, APL, _, _),
-	display("DAX", APL).
+	reverse(APL, APL2),
+	display("DAX", APL2).
 	
 %Liefert drei Listen über den DAX Kurs zurueck
 %AP ist eine Liste mit allen Eröffnungskursen und Schlusskursen.
@@ -43,7 +44,7 @@ get_all_prices(L, AP, OP, CP) :-
 	dax(Head, OpeningPrice, ClosingPrice),
 	OPScaled is OpeningPrice / 700,
 	CPScaled is ClosingPrice / 700,
-	append([OPScaled], [CPScaled], DaxPart),
+	append([CPScaled], [OPScaled], DaxPart),
 	get_all_prices(Tail, AP2, OP2, CP2),
 	append(AP2, DaxPart, AP),
 	append(OP2, [OPScaled], OP),
@@ -109,7 +110,7 @@ print_two_avg_dax(N1, N2) :-
 %TODO
 
 /*1.5*/
-
+	
 make_forecast(Date1, Date2, Forecast, Sublist) :-
 	Date1 @< Date2,
 	get_date_list(L),
