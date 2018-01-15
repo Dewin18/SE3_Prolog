@@ -1,3 +1,13 @@
+/* SE3 LP - Aufgabenblatt 10
+
+Autor: 
+Dewin Bagci, 6815336
+Christian Cyll, 6870744
+Max Wutz, 6308876
+
+Datum 15.01.2018
+*/
+
 % init_display(Display-Objekt,Fenster-Ueberschrift,Fensterbreite,Fensterhoehe)
 init_display(Name,Label,Width,Height):-
    free(Name),
