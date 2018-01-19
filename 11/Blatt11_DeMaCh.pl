@@ -30,7 +30,6 @@ head([H|_], H).
 translate(GerList, EngList) :- 
 	var(EngList),
 	trans("DE", GerList, [], EngList).
-	
 
 %2. Fall: Uebersetzung von Englisch nach Deutsch	
 %translate(-ListOfGermanWords, +ListOfEnglishWords)
@@ -46,6 +45,8 @@ translate(GerList, EngList) :-
 	trans("DE", GerList, [], Translated),
 	Translated == EngList.
 
+%Gibt eine Liste mit allen Woertern die übersetzt werden konnten zurück.
+%trans(+CountryCode, +InputList, +EmptyList, -ResultList)
 trans(_, [], NewList, NewList).
 trans(Cc, L1, EmptyList, L2) :-
 	head(L1, Word1),
