@@ -10,6 +10,9 @@ Datum 19.01.2018
 
 :- consult('translations.pl').
 
+tail(T, [_|T]).
+head([H|_], H).
+
 %Bei diesem Design ergeben sich genau drei Faelle fuer die Uebersetzung.
 
 %1. Fall: Es gibt nur die Liste mit deutschen Woertern. Dann wird jedes
@@ -26,21 +29,39 @@ Datum 19.01.2018
 %translate(+ListOfGermanWords, -ListOfEnglishWords)
 translate(GerList, EngList) :- 
 	var(EngList),
-	translation(GerList, EngList).
+	trans("DE", GerList, [], EngList).
+	
 
 %2. Fall: Uebersetzung von Englisch nach Deutsch	
 %translate(-ListOfGermanWords, +ListOfEnglishWords)
 translate(GerList, EngList) :- 
 	var(GerList),
-	translation(GerList, EngList).
-
+	trans("EN", EngList, [], GerList).
+	
 %3. Fall: Deutsche Uebersetzung mit dem Englischen vergleichen.
 %translate(+ListOfGermanWords, +ListOfEnglishWords)
 translate(GerList, EngList) :- 
 	nonvar(GerList),
 	nonvar(EngList),
+	trans("DE", GerList, [], Translated),
+	Translated == EngList.
 
-	translation(GerList, EngList).
+trans(_, [], NewList, NewList).
+trans(Cc, L1, EmptyList, L2) :-
+	head(L1, Word1),
+	tail(T, L1),
+	get_translation(Cc, Word1, Word2),
+	append(EmptyList, [Word2], NewList),
+	trans(Cc, T, NewList, L2).
+	
+%TODO -- funktioniert zwar, ein refactoring waere aber angebracht.
 
+%Der Fall, dass das Wort uebersetzt werden kann	
+get_translation(P, Word1, Word2) :- P == "DE", translation(Word1, Word2).
+get_translation(P, Word1, Word2) :- P == "EN", translation(Word2, Word1).	
 
+%Der Fall, dass das Wort nicht uebersetzt werden kann.	
+get_translation(P, Word1, Word2) :- P == "DE", \+ translation(Word1, Word2), Word2 = Word1.	
+get_translation(P, Word1, Word2) :- P == "EN", \+ translation(Word2, Word1), Word2 = Word1.
+	
 	

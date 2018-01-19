@@ -1,3 +1,5 @@
+
+
 %Personalpronomen	
 translation(er, he).	
 translation(sie, she).	
@@ -21,6 +23,7 @@ translation(geht, goes).
 translation(lacht, laughs).
 translation(hat, has).
 translation(hat, is).
+translation(ist, is).
 
 %Adjektive
 translation(schoen, nice).
