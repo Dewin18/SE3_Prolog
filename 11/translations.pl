@@ -19,6 +19,8 @@ translation(haus, house).
 translation(macht, makes).
 translation(geht, goes).
 translation(lacht, laughs).
+translation(hat, has).
+translation(hat, is).
 
 %Adjektive
 translation(schoen, nice).

@@ -10,10 +10,17 @@ Datum 19.01.2018
 
 :- consult('translations.pl').
 
+%Uebersetzung von Deutsch nach Englisch
 %translate(?ListOfGermanWords, ?ListOfEnglischWords)
-%translate(GerList, EngList) :- 
-	
+translate(GerList, EngList) :- 
+	var(EngList),
+	translation(GerList, EngList).
 
+%Uebersetzung von Englisch nach Deutsch	
+%translate(?ListOfGermanWords, ?ListOfEnglischWords)
+translate(GerList, EngList) :- 
+	var(GerList),
+	translation(GerList, EngList).
 
 
 
