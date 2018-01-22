@@ -5,13 +5,17 @@ Dewin Bagci, 6815336
 Christian Cyll, 6870744
 Max Wutz, 6308876
 
-Datum 19.01.2018
+Datum 22.01.2018
 */
 
 :- consult('translations.pl').
 
-tail(T, [_|T]).
+%Gibt den Listenkopf zurueck und entfernt die Restliste
 head([H|_], H).
+
+%Gibt die Restliste zurueck und entfernt den Listenkopf
+tail(T, [_|T]).
+
 
 %Bei diesem Design ergeben sich genau drei Faelle fuer die Uebersetzung.
 
@@ -56,8 +60,6 @@ trans(Cc, L1, EmptyList, L2) :-
 	get_translation(Cc, Word1, Word2),
 	append(EmptyList, [Word2], NewList),
 	trans(Cc, T, NewList, L2).
-	
-%TODO -- funktioniert zwar, ein refactoring waere aber angebracht.
 
 %Der Fall, dass das Wort uebersetzt werden kann	
 get_translation(P, Word1, Word2) :- P == "DE", translation(Word1, Word2).
