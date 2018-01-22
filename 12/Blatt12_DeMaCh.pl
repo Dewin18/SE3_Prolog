@@ -117,7 +117,7 @@ Datum 20.01.2018
 
 %(define (peano n)
 %  (if (equal? n '(0))      %Rekursionsabbruch
-%      0
+%      n
 %      (peano (cadr n) )))  %Rekursionsschritt
 
 /*Beispieleingabe 1*/
@@ -188,5 +188,27 @@ Datum 20.01.2018
 %(integer2peano 2) ==> '(s (s (0)))
 %(integer2peano 6) ==> '(s (s (s (s (s (s (0)))))))
 
-/*TODO add/3 */
+/*add/3*/
+
+%In Prolog benoetigen wir fuer die Ausgabe des Additionsergebnisses eine dritte Variable. In Scheme reichen zwei Variablen aus um
+%zwei Peano-Zahlen endrekursiv berechnen zu können. In Prolog haben wir den vorteil, dass wir durch einen unterspezifizierten Aufruf
+%alle alternativen sehen koennen, aus welchen Peano-Zahlen sich die Peano Summe ergeben kann. Leider ist das Praedikat fuer 
+%die Addition von Peano-Zahlen naiv rekursiv definiert und deshalb Rechen und Speicher intensiver. Es werden im rekursiven Abstieg
+%alle s-Schalen des ersten Arguments entfernt und anschließend beim rekursiven Aufstieg auf das zweite Argument angewendet. Dieser Vorgang
+%laesst sich in Scheme sequenziell beim rekursiven abstieg durchfueren, sodass beim rekursiven Aufstieg bereits das Ergebnis vorliegt.
+
+/*Implementierung des Praedikates add/3 in Scheme*/
+
+%(define (add p1 p2)
+%  (if (equal? '(0) p2)
+%      p1
+%      (add (list 's p1) (cadr p2))))
+
+/*einige Beispieleingaben*/
+
+%(add '(0) '(0)) ==> '(0)
+%(add '(s (0)) '(0)) ==> '(s (0))         %Addition mit der '(0) auf der rechten Seite
+%(add '(0) '(s (0))) ==> '(s (0))         %Addition mit der '(0) auf der linken Seite
+%(add '(s (s (s (0)))) '(s (s (0)))) ==> '(s (s (s (s (s (0))))))
+
 
