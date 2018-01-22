@@ -29,13 +29,15 @@ head([H|_], H).
 %translate(+ListOfGermanWords, -ListOfEnglishWords)
 translate(GerList, EngList) :- 
 	var(EngList),
-	trans("DE", GerList, [], EngList).
+	trans("DE", GerList, [], NestedEngList),
+	flatten(NestedEngList, EngList).
 
 %2. Fall: Uebersetzung von Englisch nach Deutsch	
 %translate(-ListOfGermanWords, +ListOfEnglishWords)
 translate(GerList, EngList) :- 
 	var(GerList),
-	trans("EN", EngList, [], GerList).
+	trans("EN", EngList, [], NestedGerList),
+	flatten(NestedGerList, GerList).
 	
 %3. Fall: Deutsche Uebersetzung mit dem Englischen vergleichen.
 %translate(+ListOfGermanWords, +ListOfEnglishWords)
