@@ -44,7 +44,7 @@ getShape(ShapeName, Shape) :- Shape = 'java.awt.geom.Ellipse2D$Float', ShapeName
 getShape(ShapeName, Shape) :- Shape = 'java.awt.geom.QuadCurve2D$Float', ShapeName = curve. 	
 
 %Draws the grid with all horizontal and vertical waves
-%draw_grid(+Frame, +Color, +NumberOfRowsAndColumns, + NumberOfFragments, +Amplitude, +GapBetweenRowsAndColumns)
+%draw_grid(+Frame, +Color, +NumberOfRowsAndColumns, + NumberOfFragments, +Amplitude, +GapBetweenRowsAndColumns, +StartPosition)
 draw_grid(Frame, Color, RowCol, NumberOfFragments, Amplitude, Gap, Position) :-
 	get_point_content(Position, X, Y),
 	NextPoint is 2 * Y,
