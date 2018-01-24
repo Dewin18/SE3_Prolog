@@ -99,16 +99,47 @@ foo1([X|Xs], [Y|Ys]) :-
 
 %(foo2 '(a b c d c e a)) ==> '(b d c e a)
 
+%Reimplementation in Prolog:
+	
+	
+foo2([],[]).
+
+foo2([H | T], List) :-    
+     member(H, T),
+     foo2( T, List).
+
+foo2([H | T], [H|T1]) :- 
+      \+member(H, T),
+      foo2( T, T1).	
+	  
 /*2.3*/
 %foo3 liefert eine Liste mit den Elementen zurueck, die gleichzeitig in der Liste x und in der Liste y enthalten sind. 
 %Haben beide Listen verschiedene Elemente, wird die leere Liste zurueckgegeben.
 
 %(foo3 '(a b c d e) '(g a b h)) ==> '(a b)
 
+%Reimplementation in Prolog:
+
+foo3([],_,[]).
+
+foo3([H|T],L2,[H|List]) :-
+	member(H,L2),
+	foo3(T,L2,List).
+	
+foo3([H|T],L2,List) :-
+	\+member(H,L2),
+	foo3(T,L2,List).
+	
 /*2.4*/
 %foo4 liefert eine Liste in umgekehrter Reihenfolge und implementiert damit die bekannte reverse Funktion.
 
 %(foo4 '(a b c d e)) ==> '(e d c b a)
+
+%Reimplementation in Prolog:
+
+foo4([X|Xs],[Firsts|X]):-
+	foo4(Firsts,)
+
 
 /*2.5*/
 %foo5 liefert eine Liste zurueck bei der alle Elemente auf der gleichen Ebene sind, d.h. es werden durch klammern 
