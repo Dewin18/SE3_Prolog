@@ -85,6 +85,14 @@ Datum 20.01.2018
 
 %(foo1 '(a b c) '(a b c d e f g)) ==> #t
 
+%Reimplementation in Prolog:
+
+foo1([], _).
+foo1([X|Xs], [Y|Ys]) :-
+	X = Y,
+	foo1(Xs, Ys).
+
+
 /*2.2*/
 %foo2 liefert eine Liste zurueck bei der alle duplikate entfernt wurden. 
 %Ist ein Element ein Duplikat, so bleibt lediglich sein letzte vorkommen in der Liste erhalten.
