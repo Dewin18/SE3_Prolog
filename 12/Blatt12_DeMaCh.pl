@@ -137,9 +137,14 @@ foo3([H|T],L2,List) :-
 
 %Reimplementation in Prolog:
 
-foo4([X|Xs],[Firsts|X]):-
-	foo4(Firsts,)
+foo4([X|Xs], R) :-
+	foo4X([X|Xs], [], R).
 
+foo4X([], E, E).	
+foo4X([X|Xs], E, R) :-
+	foo4X(Xs, E, R2),
+	append(E, [X], L2),
+	append(R2, L2, R).
 
 /*2.5*/
 %foo5 liefert eine Liste zurueck bei der alle Elemente auf der gleichen Ebene sind, d.h. es werden durch klammern 
