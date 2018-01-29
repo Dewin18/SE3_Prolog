@@ -5,7 +5,7 @@ Dewin Bagci, 6815336
 Christian Cyll, 6870744
 Max Wutz, 6308876
 
-Datum 20.01.2018
+Datum 29.01.2018
 */
 
 /*1 Wertesemantik*/
@@ -88,9 +88,9 @@ Datum 20.01.2018
 %Reimplementation in Prolog:
 
 foo1([], _).
-foo1([X|Xs], [Y|Ys]) :-
-	X = Y,
-	foo1(Xs, Ys).
+foo1([H1|T1], [H2|T2]) :-
+	H1 = H2,
+	foo1(T1, T2).
 
 
 /*2.2*/
@@ -101,16 +101,14 @@ foo1([X|Xs], [Y|Ys]) :-
 
 %Reimplementation in Prolog:
 	
-	
 foo2([],[]).
-
-foo2([H | T], List) :-    
+foo2([H|T], List) :-    
      member(H, T),
-     foo2( T, List).
+     foo2(T, List).
 
-foo2([H | T], [H|T1]) :- 
+foo2([H|T], [H|T1]) :- 
       \+member(H, T),
-      foo2( T, T1).	
+      foo2(T, T1).	
 	  
 /*2.3*/
 %foo3 liefert eine Liste mit den Elementen zurueck, die gleichzeitig in der Liste x und in der Liste y enthalten sind. 
@@ -118,10 +116,9 @@ foo2([H | T], [H|T1]) :-
 
 %(foo3 '(a b c d e) '(g a b h)) ==> '(a b)
 
-%Reimplementation in Prolog:
+%Reimplementation von foo3 in Prolog:
 
 foo3([],_,[]).
-
 foo3([H|T],L2,[H|List]) :-
 	member(H,L2),
 	foo3(T,L2,List).
@@ -135,22 +132,33 @@ foo3([H|T],L2,List) :-
 
 %(foo4 '(a b c d e)) ==> '(e d c b a)
 
-%Reimplementation in Prolog:
+%Reimplementation von foo4 in Prolog:
 
-foo4([X|Xs], R) :-
-	foo4X([X|Xs], [], R).
+foo4([H|T], R) :-
+	foo4X([H|T], [], R).
 
 foo4X([], E, E).	
-foo4X([X|Xs], E, R) :-
-	foo4X(Xs, E, R2),
-	append(E, [X], L2),
+foo4X([H|T], E, R) :-
+	foo4X(T, E, R2),
+	append(E, [H], L2),
 	append(R2, L2, R).
-
+	
 /*2.5*/
 %foo5 liefert eine Liste zurueck bei der alle Elemente auf der gleichen Ebene sind, d.h. es werden durch klammern 
 %verschachtelete paare oder Listen aufgelöst. foo5 Implementiert die funktion flatten aus der Scheme Standardbibliothek.
 
 %(foo5 '((a (b c d e)) (f g) h (i j))) ==> '(a b c d e f g h i j)
+
+%Reimplementation von foo5 in Prolog:
+
+foo5([], []) :- !.
+foo5([H|T], R) :-
+    !,
+    foo5(H, NewH),
+    foo5(T, NewT),
+    append(NewH, NewT, R).	
+	
+foo5(H, [H]).
 
 /*3 Programmentwicklung*/
 
